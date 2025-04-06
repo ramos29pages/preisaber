@@ -1,0 +1,64 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Node.js y frontend (React)
+node_modules/
+package-lock.json
+npm-debug.log
+yarn-error.log
+yarn.lock
+dist/
+build/
+.cache/
+.vite/
+
+# Archivos de entorno
+.env
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# Archivos de log y temporales
+*.log
+tmp/
+temp/
+*.tmp
+
+# Archivos de IDE específicos
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+.history/
+
+# Otros archivos o directorios que no quieras rastrear
+# Ejemplo: archivos de configuración local
+# config/local.json

@@ -76,7 +76,7 @@ const NavBar = ({ userRole = 'administrador' }) => {
                 isActive ? 'text-orange-400' : 'text-gray-300'
               }`} 
             />
-            <span className={`text-xs text-gray-400 ${
+            <span className={`text-xs text-gray-400 w-10 md:w-20 text-center truncate ${
                 isActive ? 'text-orange-400' : 'text-gray-400'
               }`} >{item.label}</span>
           </Link>

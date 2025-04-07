@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
     const { user } = useAuth();
 
   return (
-    <div className="min-h-[100dvh] min-w-screen flex flex-col">
+    <div className="min-h-[90dvh] min-w-screen flex flex-col bg-gray-50 max-w-screen overflow-hidden">
       <Header onMenuClick={() => setMenuAbierto(!menuAbierto)} />
       <div className="flex flex-1">
         {/* Menú lateral: se muestra siempre en pantallas medianas en adelante */}

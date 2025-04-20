@@ -9,9 +9,15 @@ import {
   faInfoCircle 
 } from '@fortawesome/free-solid-svg-icons';
 
-const NavBar = ({ userRole = 'administrador' }) => {
+const NavBar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
+
+  
+  const rolesForHome = ["administrador", "estudiante", "docente"];
+  const rolesForRegister = ["administrador", "docente"];
+  const rolesForResults = ["administrador", "docente"];
+  const rolesForFormularios = ["administrador", "docente", "estudiante"];
   
   // Define menu items with role-based access control
   const menuItems = [
@@ -19,43 +25,44 @@ const NavBar = ({ userRole = 'administrador' }) => {
       id: 'inicio', 
       label: 'Inicio', 
       icon: faHome, 
-      path: '/',
-      allowedRoles: ['administrador', 'docente', 'estudiante'] // Everyone can access home
+      path: '/dashboard',
+      allowedRoles: rolesForHome // Everyone can access home
     },
     { 
       id: 'registros', 
       label: 'Registros', 
       icon: faUsers, 
       path: '/registros',
-      allowedRoles: ['administrador', 'docente'] // Only admin and teachers can access registros
+      allowedRoles: rolesForRegister // Only admin and teachers can access registros
     },
     { 
       id: 'formularios', 
       label: 'Formularios', 
       icon: faClipboardList, 
       path: '/formularios',
-      allowedRoles: ['administrador', 'docente', 'estudiante'] // Everyone can access forms
+      allowedRoles: rolesForFormularios // Everyone can access forms
     },
     { 
       id: 'resultados', 
       label: 'Resultados', 
       icon: faChartBar, 
       path: '/resultados',
-      allowedRoles: ['administrador', 'docente'] // Only admin and teachers can see results
+      allowedRoles: rolesForResults // Only admin and teachers can see results
     },
     { 
       id: 'predisaber', 
       label: 'Predisaber', 
       icon: faInfoCircle, 
       path: '/predisaber',
-      allowedRoles: ['administrador', 'estudiante'] // Only admin and students can access predisaber
+      allowedRoles: rolesForHome // Only admin and students can access predisaber
     }
   ];
 
   // Filter menu items based on user role
-  const authorizedMenuItems = menuItems.filter(item => 
-    item.allowedRoles.includes(userRole)
-  );
+  const authorizedMenuItems = menuItems.filter(item => {
+    const userRole = localStorage.getItem('userRole'); // Assuming you store user role in localStorage
+    return item.allowedRoles.includes(userRole);
+  });
 
   return (
     <nav className="flex flex-col w-full bg-white">

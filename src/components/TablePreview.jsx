@@ -14,10 +14,10 @@ export default function TablePreview({ data }) {
 
   const transformUser = (row) => {
     return {
-      id: Number(row.identificacion) || Date.now(),
       name: row.nombre,
       email: row.correo,
       role: row.role ? row.role : "estudiante",
+      semester: "5",
       identificacion: row.identificacion,
       tipo_prueba: row.tipo_prueba,
       picture: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(

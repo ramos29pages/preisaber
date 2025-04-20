@@ -10,13 +10,14 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     // Guarda la información del usuario, por ejemplo, en localStorage si lo deseas.
+    localStorage.setItem('userRole', userData.role);
     setUser(userData);
-    navigate('/');
+    navigate('/dashboard'); // Redirige al usuario a la página de inicio después de iniciar sesión
   };
 
   const logout = () => {
     setUser(null);
-    navigate('/login');
+    navigate('/');
   };
 
   const value = {

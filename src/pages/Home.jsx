@@ -1,10 +1,9 @@
 // src/pages/Home.jsx
 const Home = () => {
     return (
-      <div>
-        <h2 className="text-2xl font-bold mb-4">Inicio</h2>
-        <p>Bienvenido a la página de inicio.</p>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <h1 className="text-xl font-bold">Inicio</h1>
+    </div>
     );
   };
   

@@ -4,8 +4,29 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faEdit, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useUsers } from "../context/UserContext";
+// import { getUsers } from "../services/userService";
 
 const Register = () => {
+
+
+  //  const [users, setUsers] = useState([]);
+    // const [loading, setLoading] = useState(true);
+  
+    // Cargar usuarios al iniciar la app
+    // const fetchUsers = async () => {
+    //   setLoading(true);
+    //   const data = await getUsers();
+    //   console.log(data);
+    //   console.log("Cargando usuarios...", loading)
+    //   setUsers(data);
+    //   setLoading(false);
+    //   console.log("Cargando usuarios...", loading)
+    // };
+  
+    // useEffect(() => {
+    //   fetchUsers();
+    // }, []);
+
   const { users } = useUsers();
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();

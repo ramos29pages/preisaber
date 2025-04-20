@@ -12,20 +12,34 @@ import LayoutDashboard from "./layout/LayoutDashboard";
 import Unauthorized from "./pages/Unauthorized";
 import Preview from "./pages/Preview";
 
+
+
 function App() {
+
+
+  const rolesForHome = ["administrador", "estudiante", "docente"];
+  const rolesForRegister = ["administrador", "docente"];
+  const rolesForAddRegister = ["administrador", "docente"];
+  const rolesForPreview = ["administrador", "docente"];
+  // const rolesForUnauthorized = ["administrador", "estudiante", "docente"];
+  // const rolesForLogin = ["administrador", "estudiante", "docente"];
+  const rolesForFormularios = ["administrador", "docente", "estudiante"];
+
+
+
   return (
     <BrowserRouter>
       <AuthProvider>
         <UserProvider>
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Login />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route
-              path="/"
+              path="/dashboard"
               element={
-                <ProtectedRoute requiredRole={["administrador", "estudiante", "docente"]}>
+                <ProtectedRoute requiredRole={rolesForHome}>
                   <LayoutDashboard>
-                    <Home />
+                  <Home />
                   </LayoutDashboard>
                 </ProtectedRoute>
               }
@@ -33,7 +47,7 @@ function App() {
             <Route
               path="/registros"
               element={
-                <ProtectedRoute requiredRole={["administrador", "docente"]}>
+                <ProtectedRoute requiredRole={rolesForRegister}>
                   <LayoutDashboard>
                     <Register />
                   </LayoutDashboard>
@@ -43,7 +57,7 @@ function App() {
             <Route
               path="/formularios"
               element={
-                <ProtectedRoute requiredRole={["administrador", "docente", "estudiante"]}>
+                <ProtectedRoute requiredRole={rolesForFormularios}>
                   <LayoutDashboard>
                     <Register />
                   </LayoutDashboard>
@@ -53,7 +67,7 @@ function App() {
             <Route
               path="/add-registers"
               element={
-                <ProtectedRoute requiredRole={["administrador", "docente"]}>
+                <ProtectedRoute requiredRole={rolesForAddRegister}>
                   <LayoutDashboard>
                     <AddRegister />
                   </LayoutDashboard>
@@ -63,7 +77,7 @@ function App() {
             <Route
               path="/preview"
               element={
-                <ProtectedRoute requiredRole={["administrador", "docente"]}>
+                <ProtectedRoute requiredRole={rolesForPreview}>
                   <LayoutDashboard>
                     <Preview />
                   </LayoutDashboard>

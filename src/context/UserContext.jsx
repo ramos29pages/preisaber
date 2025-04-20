@@ -12,6 +12,7 @@ export const UserProvider = ({ children }) => {
   const fetchUsers = async () => {
     setLoading(true);
     const data = await getUsers();
+    console.log(data);
     setUsers(data);
     setLoading(false);
   };
@@ -23,7 +24,7 @@ export const UserProvider = ({ children }) => {
   // Funciones CRUD
   const createUser = async (user) => {
     const newUser = await addUser(user);
-    setUsers((prev) => [...prev, newUser]);
+    setUsers((prev) => [newUser, ...prev]);
   };
 
   const editUser = async (user) => {

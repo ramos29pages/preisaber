@@ -5,11 +5,11 @@ import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const { login } = useAuth();
+  const administradores = ["danielramos9991@gmail.com"];
 
   function capitalizarPrimeraLetra(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
-
 
   const handleLoginSuccess = (credentialResponse) => {
     if (credentialResponse.credential) {
@@ -19,25 +19,33 @@ const Login = () => {
       );
 
       console.log("Decoded JWT:", decoded);
-      console.log("Decoded JWT Name :", decoded.name.split(" ")[0] +" "+ decoded.name.split(" ")[2]);
+      console.log(
+        "Decoded JWT Name :",
+        decoded.name.split(" ")[0] + " " + decoded.name.split(" ")[2]
+      );
 
       const email = decoded.email || "";
       let role = "";
-      let given_name = capitalizarPrimeraLetra(decoded.name.split(" ")[0]) +" "+ capitalizarPrimeraLetra(decoded.name.split(" ")[2]);
-
+      let given_name =
+        capitalizarPrimeraLetra(decoded.name.split(" ")[0]);
 
       // Regex para docentes: formato: letras.palabra@curnvirtual.edu.co o uninunez.edu.co
-    //   const docenteRegex = /^[a-z]+\.[a-z]+@(curnvirtual\.edu\.co|uninunez\.edu\.co)$/i;
+      const docenteRegex =
+        /^[a-z]+\.[a-z]+@(curnvirtual\.edu\.co|uninunez\.edu\.co)$/i;
       // Regex para estudiantes: formato: letras + dígitos@curnvirtual.edu.co o uninunez.edu.co
-    //   const estudianteRegex = /^[a-z]+[0-9]+@(curnvirtual\.edu\.co|uninunez\.edu\.co)$/i;
+      const estudianteRegex =
+        /^[a-z]+[0-9]+@(curnvirtual\.edu\.co|uninunez\.edu\.co)$/i;
 
-    //   if (docenteRegex.test(email)) {
-    //     role = "docente";
-    //   } else if (estudianteRegex.test(email)) {
-    //     role = "estudiante";
-    //   }
-
-    role = 'administrador';
+      if (docenteRegex.test(email)) {
+        role = "docente";
+      } else if (estudianteRegex.test(email)) {
+        role = "estudiante";
+      } else if (administradores.includes(email)) {
+        // si el email NO esta en la curn pero esta dentro de la lista de administradores asignar el rol de administrador tambien
+        role = "administrador";
+      } else {
+        role = "invitado"; // Asignar rol de invitado si no coincide con ninguno de los anteriores
+      }
 
       const userData = {
         username: decoded.name,

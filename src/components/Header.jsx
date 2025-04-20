@@ -48,7 +48,7 @@ const Header = ({ onMenuClick }) => {
         <img
           src="https://www.uninunez.edu.co/images/logotxttealw.svg"
           alt="INUÑEZ Logo"
-          className="h-8 md:h-12 lg:h-12" 
+          className="h-8 md:h-12" 
         />
       </div>
 

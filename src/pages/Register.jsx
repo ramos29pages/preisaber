@@ -13,47 +13,9 @@ import { useUsers } from "../context/UserContext";
 // import { getUsers } from "../services/userService";
 import { SkeletonUser } from "../components/SkeletonUser";
 
-// const dummyUsers = [
-//   {
-//     name: "Luis Gómez",
-//     email: "luisgomez21@curnvirtual.edu.co",
-//     role: "estudiante dummy",
-//     semester: "5",
-//     identificacion: "3",
-//     tipo_prueba: "tecnologica",
-//     id: "6803e4fd011c17f714dbc8e0",
-//     picture: "https://api.dicebear.com/7.x/avataaars/svg?seed=Luis",
-//   },
-// ];
-
 const Register = () => {
   // const [loading, setLoading] = useState(true);
   let [_showAddButtons, setShowAddButtons] = useState(false);
-
-  // Cargar usuarios al iniciar la app
-  // const fetchUsers = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const data = await getUsers();
-  //     // Si el array está vacío o es falsy, usar dummyUsers
-  //     if (Array.isArray(data) && data.length > 0) {
-  //       setUsers(data);
-  //     } else {
-  //       console.log("Backend sin datos, cargando usuarios dummy...", loading);
-  //       setUsers(dummyUsers);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error al obtener usuarios del service:", error);
-  //     // En caso de error (backend caído), cargar dummy
-  //     setUsers(dummyUsers);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchUsers();
-  // }, []);
 
   const { users, user } = useUsers();
 

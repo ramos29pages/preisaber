@@ -13,6 +13,7 @@ import Unauthorized from "./pages/Unauthorized";
 import Preview from "./pages/Preview";
 import AddUserForm from "./components/AddUserForm";
 import Formularios from "./pages/Formularios";
+import ModelManager from "./components/ModelManager";
 
 
 
@@ -62,6 +63,16 @@ function App() {
                 <ProtectedRoute requiredRole={rolesForFormularios}>
                   <LayoutDashboard>
                     <Formularios />
+                  </LayoutDashboard>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/modelos"
+              element={
+                <ProtectedRoute requiredRole={rolesForFormularios}>
+                  <LayoutDashboard>
+                    <ModelManager />
                   </LayoutDashboard>
                 </ProtectedRoute>
               }

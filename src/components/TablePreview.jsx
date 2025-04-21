@@ -20,9 +20,7 @@ export default function TablePreview({ data }) {
       semester: "5",
       identificacion: row.identificacion,
       tipo_prueba: row.tipo_prueba,
-      picture: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(
-        row.nombre
-      )}`,
+      picture: `https://thumbs.dreamstime.com/b/default-avatar-profile-image-vector-social-media-user-icon-potrait-182347582.jpg`,
     };
   };
 

@@ -9,11 +9,45 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' }
 });
 
+
+
+const dummyUsers = [
+  {
+    name: "Luis Gómez",
+    email: "luisgomez21@curnvirtual.edu.co",
+    role: "est. dummy",
+    semester: "5",
+    identificacion: "3",
+    tipo_prueba: "tecnologica",
+    id: "6803e4fd011c17f714dbc8e0",
+    picture: "https://api.dicebear.com/7.x/avataaars/svg?seed=Luis",
+  },
+];
+
+
 /**
  * Obtiene todos los usuarios desde la API.
  */
 export const getUsers = async () => {
-  const response = await api.get('/');
+  try {
+    const response = await api.get("/");
+    if (Array.isArray(response.data) && response.data.length > 0) {
+      return response.data;
+    } else {
+      console.log("Backend sin datos, cargando dummyUsers");
+      return dummyUsers;
+    }
+  } catch (error) {
+    console.error("Error al obtener usuarios:", error);
+    return dummyUsers;    // <–– fallback en caso de error de red
+  }
+};
+
+/**
+ * Obtiene usuario por id desde la API.
+ */
+export const getUserById= async (email) => {
+  const response = await api.get('/' + email);
   return response.data;
 };
 

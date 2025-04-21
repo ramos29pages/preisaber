@@ -6,7 +6,8 @@ import {
   faUsers, 
   faClipboardList, 
   faChartBar, 
-  faInfoCircle 
+  faInfoCircle ,
+  faRobot
 } from '@fortawesome/free-solid-svg-icons';
 
 const NavBar = () => {
@@ -33,6 +34,13 @@ const NavBar = () => {
       label: 'Registros', 
       icon: faUsers, 
       path: '/registros',
+      allowedRoles: rolesForRegister // Only admin and teachers can access registros
+    },
+    { 
+      id: 'modelos', 
+      label: 'Modelos', 
+      icon:   faRobot, 
+      path: '/modelos',
       allowedRoles: rolesForRegister // Only admin and teachers can access registros
     },
     { 

@@ -1,30 +1,50 @@
 // src/context/UserContext.jsx
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getUsers, addUser, updateUser, deleteUser } from "../services/userService";
+import { getUsers, addUser, updateUser, deleteUser, getUserById } from "../services/userService";
+import { useAuth } from "./AuthContext";
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
+
+  // const email = localStorage.getItem("host_email");
+  const { user: userAuth } = useAuth();
   const [users, setUsers] = useState([]);
+  const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Cargar usuarios al iniciar la app
-  const fetchUsers = async () => {
-    setLoading(true);
-    const data = await getUsers();
-    console.log(data);
-    setUsers(data);
-    setLoading(false);
-  };
-
   useEffect(() => {
     fetchUsers();
+
+    console.log('usuarios tods: ' , users);
+
   }, []);
+  
+
+  const fetchUsers = async ()=>{
+    setLoading(true);
+    const data = await getUsers();
+    setUsers(data);
+    setLoading(false);
+    console.log('usuarios: ' , data);
+
+    if(userAuth.role === 'estudiante'){
+      const userActive = await getUserById(localStorage.getItem("host_email"));
+      setUser(userActive);
+      console.log('userActive', userActive);
+    }
+  }
 
   // Funciones CRUD
   const createUser = async (user) => {
     const newUser = await addUser(user);
     setUsers((prev) => [newUser, ...prev]);
+  };
+
+  const getUser = async (id) => {
+    return await getUserById(id);
+    ;
   };
 
   const editUser = async (user) => {
@@ -41,7 +61,7 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ users, loading, createUser, editUser, removeUser, fetchUsers }}
+      value={{ users, createUser, editUser, removeUser, getUser, user, loading }}
     >
       {children}
     </UserContext.Provider>

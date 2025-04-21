@@ -11,7 +11,10 @@ export const AuthProvider = ({ children }) => {
   const login = (userData) => {
     // Guarda la información del usuario, por ejemplo, en localStorage si lo deseas.
     localStorage.setItem('userRole', userData.role);
+    localStorage.setItem('host_email', userData.email);
+    localStorage.setItem("auth_user", JSON.stringify(userData));
     setUser(userData);
+
     navigate('/dashboard'); // Redirige al usuario a la página de inicio después de iniciar sesión
   };
 
@@ -21,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const value = {
-    user,
+    user: user,
     login,
     logout,
     isAuthenticated: !!user

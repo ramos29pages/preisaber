@@ -11,6 +11,8 @@ import Login from "./pages/Login";
 import LayoutDashboard from "./layout/LayoutDashboard";
 import Unauthorized from "./pages/Unauthorized";
 import Preview from "./pages/Preview";
+import AddUserForm from "./components/AddUserForm";
+import Formularios from "./pages/Formularios";
 
 
 
@@ -59,7 +61,7 @@ function App() {
               element={
                 <ProtectedRoute requiredRole={rolesForFormularios}>
                   <LayoutDashboard>
-                    <Register />
+                    <Formularios />
                   </LayoutDashboard>
                 </ProtectedRoute>
               }
@@ -70,6 +72,16 @@ function App() {
                 <ProtectedRoute requiredRole={rolesForAddRegister}>
                   <LayoutDashboard>
                     <AddRegister />
+                  </LayoutDashboard>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/add-user"
+              element={
+                <ProtectedRoute requiredRole={rolesForAddRegister}>
+                  <LayoutDashboard>
+                    <AddUserForm />
                   </LayoutDashboard>
                 </ProtectedRoute>
               }

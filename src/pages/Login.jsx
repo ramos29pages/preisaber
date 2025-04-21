@@ -43,8 +43,6 @@ const Login = () => {
       } else if (administradores.includes(email)) {
         // si el email NO esta en la curn pero esta dentro de la lista de administradores asignar el rol de administrador tambien
         role = "administrador";
-      } else {
-        role = "invitado"; // Asignar rol de invitado si no coincide con ninguno de los anteriores
       }
 
       const userData = {

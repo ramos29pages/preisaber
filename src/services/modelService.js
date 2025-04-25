@@ -1,5 +1,6 @@
 // src/services/modelService.js
 import axios from "axios";
+const API_BASE_URL = 'http://localhost:8000';
 const API = axios.create({ baseURL: "http://localhost:8000/models" });
 
 const dummyModels = [
@@ -45,4 +46,24 @@ export const createModel = async (formData) => {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return data;
+};
+
+export const updateUserModel = async (modelId, data) => {
+  try {
+    const response = await axios.patch(`${API_BASE_URL}/models/${modelId}`, data);
+    return response.data; // Devuelve el modelo actualizado
+  } catch (error) {
+    console.error("Error al actualizar el modelo:", error);
+    return null;
+  }
+};
+
+export const deleteModel = async (modelId) => {
+  try {
+    await axios.delete(`${API_BASE_URL}/models/${modelId}`);
+    return true; // Indica que la eliminación fue exitosa
+  } catch (error) {
+    console.error("Error al eliminar el modelo:", error);
+    return false;
+  }
 };

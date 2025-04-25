@@ -1,14 +1,81 @@
-import { faSort, faDownload, faRobot } from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from 'react';
+import { faSort, faDownload, faRobot, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { SkeletonModel } from "./SkeletonModel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { updateUserModel, deleteModel } from '../services/modelService';
+import EditModelModal from './EditModelModal'; // Import the modal
+import DeleteConfirmationModal from './DeleteConfirmationModal'; // Import the modal
 
-export default function TableModel({requestSort, sortConfig, searchTerm, sortedModels, formatAccuracy, formatDate}) {
+export default function TableModel({ requestSort, sortConfig, searchTerm, sortedModels, formatAccuracy, formatDate, onModelUpdated, onModelDeleted }) {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentModel, setCurrentModel] = useState(null);
+  const [editedUploader, setEditedUploader] = useState('');
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
 
+  const handleOpenEditModal = (model) => {
+    setCurrentModel(model);
+    setEditedUploader(model.uploader);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setCurrentModel(null);
+    setEditedUploader('');
+  };
+
+  const handleUploaderChange = (event) => {
+    setEditedUploader(event.target.value);
+  };
+
+  const handleSaveEdit = async () => {
+    if (currentModel && editedUploader !== currentModel.uploader) {
+      try {
+        const updatedModel = await updateUserModel(currentModel.id, { uploader: editedUploader });
+        if (updatedModel) {
+          onModelUpdated(updatedModel);
+          handleCloseEditModal();
+        } else {
+          console.error("Error al actualizar el modelo.");
+        }
+      } catch (error) {
+        console.error("Error al actualizar el modelo:", error);
+      }
+    } else {
+      handleCloseEditModal();
+    }
+  };
+
+  const handleOpenDeleteConfirmation = (model) => {
+    setCurrentModel(model);
+    setIsDeleteConfirmationOpen(true);
+  };
+
+  const handleCloseDeleteConfirmation = () => {
+    setIsDeleteConfirmationOpen(false);
+    setCurrentModel(null);
+  };
+
+  const handleDeleteModel = async () => {
+    if (currentModel) {
+      try {
+        const success = await deleteModel(currentModel.id);
+        if (success) {
+          onModelDeleted(currentModel.id);
+          handleCloseDeleteConfirmation();
+        } else {
+          console.error("Error al eliminar el modelo.");
+        }
+      } catch (error) {
+        console.error("Error al eliminar el modelo:", error);
+      }
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="md:min-w-full divide-y divide-red-600">
+        <table className="md:min-w-full divide-y divide-orange-500">
           <thead className="bg-gray-100">
             <tr>
               <th
@@ -30,10 +97,10 @@ export default function TableModel({requestSort, sortConfig, searchTerm, sortedM
                 </div>
               </th>
               <th
-                className="md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                className="md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hidden md:table-cell"
                 onClick={() => requestSort("accuracy")}
               >
-                <div className="items-center hidden md:flex">
+                <div className="items-center flex">
                   Precisión
                   {sortConfig.key === "accuracy" && (
                     <FontAwesomeIcon
@@ -48,10 +115,10 @@ export default function TableModel({requestSort, sortConfig, searchTerm, sortedM
                 </div>
               </th>
               <th
-                className="md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                className="md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hidden md:table-cell"
                 onClick={() => requestSort("uploader")}
               >
-                <div className="items-center hidden md:flex">
+                <div className="items-center flex">
                   Creado Por
                   {sortConfig.key === "uploader" && (
                     <FontAwesomeIcon
@@ -66,10 +133,10 @@ export default function TableModel({requestSort, sortConfig, searchTerm, sortedM
                 </div>
               </th>
               <th
-                className="md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                className="md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hidden md:table-cell"
                 onClick={() => requestSort("date")}
               >
-                <div className="items-center hidden md:flex">
+                <div className="items-center flex">
                   Fecha
                   {sortConfig.key === "date" && (
                     <FontAwesomeIcon
@@ -83,7 +150,7 @@ export default function TableModel({requestSort, sortConfig, searchTerm, sortedM
                   )}
                 </div>
               </th>
-              <th className="md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden">
+              <th className="md:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Acciones
               </th>
             </tr>
@@ -93,7 +160,7 @@ export default function TableModel({requestSort, sortConfig, searchTerm, sortedM
               sortedModels.map((model, index) => (
                 <tr
                   key={model.id || index}
-                  className="hover:bg-orange-50 transition-colors"
+                  className="hover:bg-slate-50 transition-colors"
                 >
                   <td className="md:px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center max-w-100">
@@ -112,9 +179,9 @@ export default function TableModel({requestSort, sortConfig, searchTerm, sortedM
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap md:table-cell">
                     <div className="flex items-center">
-                      <div className={`h-2.5 rounded-full`}>
+                      <div className={`h-2.5 rounded-full bg-gray-200 w-[${parseFloat(model.accuracy) || 0}%]`}>
                         <div
-                          className={`h-2.5 rounded-full`}
+                          className={`h-2.5 rounded-full bg-orange-500`}
                           style={{
                             width: `${parseFloat(model.accuracy) || 0}%`,
                           }}
@@ -125,26 +192,40 @@ export default function TableModel({requestSort, sortConfig, searchTerm, sortedM
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap ">
+                  <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                     <div className="text-sm text-gray-900">
                       {model.uploader}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                     <div className="text-sm text-gray-900">
                       {formatDate(model.date)}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap hidden text-sm">
-                    <a
-                      href={model.fileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-orange-500 hover:text-orange-700 transition-colors inline-flex items-center gap-1 bg-orange-50 hover:bg-orange-100 px-3 py-1 rounded-full"
-                    >
-                      <FontAwesomeIcon icon={faDownload} />
-                      <span>Descargar</span>
-                    </a>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div className="flex items-center justify-end">
+                      <button
+                        onClick={() => handleOpenEditModal(model)}
+                        className="text-indigo-500 hover:text-indigo-700 transition-colors mr-2"
+                      >
+                        <FontAwesomeIcon className='cursor-pointer hover:scale-120' icon={faEdit} size="sm" />
+                      </button>
+                      <button
+                        onClick={() => handleOpenDeleteConfirmation(model)}
+                        className="text-red-500 hover:text-red-700 transition-colors"
+                      >
+                        <FontAwesomeIcon className='cursor-pointer' icon={faTrash} size="sm" />
+                      </button>
+                      <a
+                        href={model.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-orange-500 hover:text-orange-700 transition-colors inline-flex items-center gap-1 bg-orange-50 hover:bg-orange-100 px-3 py-1 rounded-full ml-2"
+                      >
+                        <FontAwesomeIcon className='text-orange-500' icon={faDownload} size="sm" />
+                        <span className='text-orange-500'>Descargar</span>
+                      </a>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -158,8 +239,8 @@ export default function TableModel({requestSort, sortConfig, searchTerm, sortedM
                     "No se encontraron modelos con ese criterio"
                   ) : (
                     <>
-                    <SkeletonModel />
-                    <SkeletonModel />
+                      <SkeletonModel />
+                      <SkeletonModel />
                     </>
                   )}
                 </td>
@@ -169,15 +250,29 @@ export default function TableModel({requestSort, sortConfig, searchTerm, sortedM
         </table>
       </div>
 
-      {/* Footer de la tabla con paginación si lo necesitas en el futuro */}
       <div className="bg-gray-50 px-6 py-3 flex justify-between items-center">
         <div className="text-sm text-gray-500">
           {sortedModels.length}{" "}
           {sortedModels.length === 1 ? "modelo" : "modelos"} encontrados
         </div>
-
-        {/* Aquí puedes agregar paginación si lo necesitas */}
       </div>
+
+      {/* Modales */}
+      <EditModelModal
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        model={currentModel}
+        editedUploader={editedUploader}
+        onUploaderChange={handleUploaderChange}
+        onSave={handleSaveEdit}
+      />
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteConfirmationOpen}
+        onClose={handleCloseDeleteConfirmation}
+        model={currentModel}
+        onConfirmDelete={handleDeleteModel}
+      />
     </div>
   );
 }

@@ -10,6 +10,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import Hamster from './Hamster';
+import Loader from './Loader';
 
 ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Title, Tooltip, Legend);
 
@@ -70,7 +72,9 @@ const Metrics = () => {
   }, []);
 
   if (loading) {
-    return <div className='h-100 w-full text-gray-500 animate-pulse mb-4 bg-gray-200 rounded-xl'>Cargando métricas...</div>;
+    return <div className='h-100 w-full flex justify-center text-gray-500 animate-pulse mb-4 bg-gray-200 rounded-xl'>
+      <Loader/>
+    </div>;
   }
 
   if (error) {

@@ -86,7 +86,7 @@ export default function ModelManager() {
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-orange-600">
+          <h2 className="text-2xl font-bold text-orange-500">
             Modelos de Predicción
           </h2>
           <button

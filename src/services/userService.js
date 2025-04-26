@@ -1,7 +1,7 @@
 // src/services/userService.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/users';
+const API_URL = 'http://localhost:8000/usuarios';
 const DEFAULT_PICTURE = 'https://static-00.iconduck.com/assets.00/profile-user-icon-512x512-nm62qfu0.png';
 
 const api = axios.create({

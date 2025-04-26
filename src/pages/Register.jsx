@@ -1,34 +1,60 @@
 // src/pages/Register.jsx
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSearch,
-  faEdit,
-  faPaperclip,
-  faUserPlus,
-  faClose,
-} from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import AddRegisterModal from "../components/AddregisterModal";
+import { faSearch, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+// import { useNavigate } from "react-router-dom";
 import { useUsers } from "../context/UserContext";
 // import { getUsers } from "../services/userService";
 import { SkeletonUser } from "../components/SkeletonUser";
+import RegisterCard from "../components/RegisterCard";
+import Swal from "sweetalert2";
 
 const Register = () => {
   // const [loading, setLoading] = useState(true);
   let [_showAddButtons, setShowAddButtons] = useState(false);
 
-  const { users, user } = useUsers();
+  const { users, user, removeUser } = useUsers();
 
-  console.log('USER ACTIVE',user);
+  console.log("USER ACTIVE", user);
   // const [users, setUsers] = useState([]);
-  
+
   console.log(users);
-  
+
   const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate();
-  
+  // const navigate = useNavigate();
+
+  //eliminar usuario
+  const handlerDeleteUser = async (id) => {
+    try {
+      Swal.fire({
+        title: "Estás seguro ?",
+        text: "Esta accion no se puede revertir!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#F97316",
+        cancelButtonColor: "#64748B",
+        confirmButtonText: "Si, bórralo!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await removeUser(id); // Use the removeUser function from the context
+          Swal.fire({
+            title: "Hecho !",
+            text: "El usuario ha sido eliminado.",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false
+          });
+        }
+      });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      // toast.error("Error al eliminar el usuario");
+    }
+  };
+
   // Filtrar usuarios según búsqueda
-  const filteredUsers = users.filter((user) => {
+  let filteredUsers = users.filter((user) => {
     const term = searchTerm.toLowerCase();
     return (
       user.name.toLowerCase().includes(term) ||
@@ -60,99 +86,22 @@ const Register = () => {
           </button>
         </div>
 
+        <p>{filteredUsers.length}</p>
+
         {/* Lista de usuarios con scroll */}
         <div
           className="bg-white shadow rounded-md divide-y divide-gray-200 overflow-y-auto"
           style={{ height: "calc(100dvh - 60px - 120px)" }}
         >
           {_showAddButtons && (
-            <div className="flex absolute justify-center z-10 top-0 left-0 h-full flex-col items-center p-10 w-full bg-black/50 ">
-              <div className="flex  flex-col p-12 rounded relative items-center justify-between max-w-2xl bg-white mb-4 animate__animated animate__bounceIn">
-                <div className="flex items-center justify-between w-full mb-4">
-                  <button
-                    onClick={() => setShowAddButtons(false)}
-                    title="Cerrar"
-                    className="bg-orange-500 text-white rounded-full p-2 px-4 hover:bg-red-600 transition-all cursor-pointer absolute -top-2 -right-2"
-                  >
-                    <FontAwesomeIcon icon={faClose} size="sm" />
-                  </button>
-                </div>
-
-                <h1 className="text-xl text-center text-gray-600 font-semibold mb-8">
-                  ¿ Como deseas continuar?{" "}
-                </h1>
-
-                <div className="flex flex-col md:flex-row gap-4 mt-2">
-                  <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-all cursor-pointer hover:scale-105"
-                   onClick={() => navigate("/add-user")}>
-                    <FontAwesomeIcon className="mr-2" icon={faUserPlus} size="sm" />
-                    Agregar usuario Individual
-                  </button>
-                  <button
-                    className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-all cursor-pointer hover:scale-105"
-                    onClick={() => navigate("/add-registers")}
-                  >
-                    <FontAwesomeIcon className="mr-2" icon={faUserPlus} size="sm" />
-                    Agregar desde csv o excel
-                  </button>
-                </div>
-              </div>
-            </div>
+            <AddRegisterModal setShowAddButtons={setShowAddButtons} />
           )}
 
           {/* lista de usuarios con filtros funciando */}
 
           {filteredUsers.length > 0 ? (
             filteredUsers.map((user) => (
-              <div
-                key={user.id}
-                className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center">
-                  <div className="mr-4">
-                    <div className="w-10 h-10 overflow-hidden bg-gray-100 rounded-full ring-4 ring-gray-300">
-                      <img
-                        className="object-cover w-full h-full"
-                        src={
-                          user.picture ||
-                          "https://st4.depositphotos.com/14903220/24649/v/450/depositphotos_246499746-stock-illustration-abstract-sign-avatar-men-icon.jpg"
-                        }
-                        alt="User avatar"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-orange-500">{user.name}</p>
-                    <p className="text-xs text-slate-500 truncate font-semibold w-26 md:w-50">
-                      {user.email}
-                    </p>
-                    <p className="font-semibold text-xs max-w-40 text-orange-400 bg-orange-50 p-1 px-2 rounded-md">
-                      <FontAwesomeIcon icon={faPaperclip} size="s" /> Prueba{" "}
-                      {user.tipo_prueba.toLowerCase()}
-                    </p>
-                    {/* <p className="text-xs font-bold text-gray-500">
-                      {user.role}
-                    </p> */}
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <button
-                    title="Editar Registro"
-                    className="mx-1 text-orange-500 p-2 rounded-full transition-colors"
-                    // Aquí implementar lógica para editar
-                    onClick={() => navigate(`/add-registers?edit=${user.id}`)}
-                  >
-                    <FontAwesomeIcon icon={faEdit} size="xl" />
-                  </button>
-                  {/* <button
-                    title="Eliminar Registro"
-                    className="mx-1 text-red-500 p-2 rounded-full transition-colors"
-                    onClick={() => removeUser(user.id)}
-                  >
-                    <FontAwesomeIcon icon={faEdit} size="xl" />
-                  </button> */}
-                </div>
-              </div>
+              <RegisterCard onUserDeleted={handlerDeleteUser} user={user} />
             ))
           ) : (
             <div>

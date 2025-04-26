@@ -1,69 +1,21 @@
 // src/services/modelService.js
 import axios from "axios";
-const API_BASE_URL = 'http://localhost:8000';
-const API = axios.create({ baseURL: "http://localhost:8000/models" });
 
-const dummyModels = [
-    {
-      id: "1",
-      name: "Modelo Pruebas TYT",
-      accuracy: 0.85,               // precisión o efectividad en formato decimal
-      uploader: "danielramos",      // quien subió el modelo
-      date: "2025-04-20",           // fecha de subida (YYYY-MM-DD)
-      fileUrl: "https://example.com/models/modelo_tyt.p"  // URL de descarga
-    },
-    {
-      id: "2",
-      name: "Modelo Pruebas Saber Pro",
-      accuracy: 0.92,
-      uploader: "danielramos",
-      date: "2025-04-18",
-      fileUrl: "https://example.com/models/modelo_saberpro.pickle"
-    }
-  ];
-  
+// Creamos una instancia con baseURL apuntando a nuestro backend :contentReference[oaicite:0]{index=0}turn2search3
+const API = axios.create({
+  baseURL: "http://localhost:8000/modelos"
+});
 
-export const listModels = async () => {
-  
-
-  try {
-    const { data } = await API.get("/");
-    if (Array.isArray(data) && data.length > 0) {
-      return data;
-    } else {
-      console.log("Backend sin datos, cargando dummyQuestions");
-      return dummyModels;
-    }
-  } catch (error) {
-    console.error("Error al obtener usuarios:", error);
-    return dummyModels;    // <–– fallback en caso de error de red
-  }
-
+// Obtiene la lista de nombres de modelo (distinct "nombre") :contentReference[oaicite:1]{index=1}
+export const listModelNames = async () => {
+  const { data } = await API.get("/nombres");
+  return data;  // ej. ["saber11", "saber3", ...]
 };
 
-export const createModel = async (formData) => {
-  const { data } = await API.post("/", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
-  return data;
-};
-
-export const updateUserModel = async (modelId, data) => {
-  try {
-    const response = await axios.patch(`${API_BASE_URL}/models/${modelId}`, data);
-    return response.data; // Devuelve el modelo actualizado
-  } catch (error) {
-    console.error("Error al actualizar el modelo:", error);
-    return null;
-  }
-};
-
-export const deleteModel = async (modelId) => {
-  try {
-    await axios.delete(`${API_BASE_URL}/models/${modelId}`);
-    return true; // Indica que la eliminación fue exitosa
-  } catch (error) {
-    console.error("Error al eliminar el modelo:", error);
-    return false;
-  }
+// Obtiene todos los modelos de un nombre dado y extrae sus versiones :contentReference[oaicite:2]{index=2}
+export const listModelVersionsByName = async (modelName) => {
+  // Llamada al endpoint que devuelve array de modelos con ese nombre
+  const { data } = await API.get(`/nombre/${encodeURIComponent(modelName)}`);
+  // data = [{ id, nombre, version, … }, …]
+  return data.map(m => m.version);
 };

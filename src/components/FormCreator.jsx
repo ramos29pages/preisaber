@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { createForm } from "../services/formService";
+import React, { useState, useEffect } from "react";
+import { createForm, fetchAvailableModels, fetchModelVersions } from "../services/formService"; // Asegúrate de tener estas funciones en tu servicio
 
 const FormCreator = ({ onClose, onFormCreated }) => {
   const [newForm, setNewForm] = useState({
@@ -13,53 +13,104 @@ const FormCreator = ({ onClose, onFormCreated }) => {
         options: ["", "", ""], // Start with 3 empty options
       },
     ],
+    modelName: "",
+    modelVersion: "",
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [availableModels, setAvailableModels] = useState([]);
+  const [modelVersions, setModelVersions] = useState([]);
 
-    const validateForm = () => {
-        let isValid = true;
-        const newErrors = {};
-
-        if (!newForm.name.trim()) {
-            newErrors.name = "El nombre del formulario es obligatorio";
-            isValid = false;
-        }
-        if (!newForm.description.trim()) {
-            newErrors.description = "La descripción del formulario es obligatoria";
-            isValid = false;
-        }
-        if (!newForm.logo.trim()) {
-            newErrors.logo = "La URL del logo es obligatoria";
-            isValid = false;
-        }
-
-        if (!newForm.questions || newForm.questions.length === 0) {
-            newErrors.questions = "Debe haber al menos una pregunta";
-            isValid = false;
-        } else {
-            const questionErrors = [];
-            newForm.questions.forEach((q, index) => {
-                const qError = {};
-                if (!q.question.trim()) {
-                    qError.question = "La pregunta es obligatoria";
-                    isValid = false;
-                }
-                if (!q.options || q.options.length < 2 || q.options.some(opt => !opt.trim())) {
-                    qError.options = "Cada pregunta debe tener al menos 2 opciones y no pueden estar vacías";
-                    isValid = false;
-                }
-                if (Object.keys(qError).length > 0) {
-                    questionErrors[index] = qError;
-                }
-            });
-            if (questionErrors.length > 0) {
-                newErrors.questions = questionErrors;
-            }
-        }
-        setError(newErrors);
-        return isValid;
+  useEffect(() => {
+    const loadAvailableModels = async () => {
+      try {
+        const models = await fetchAvailableModels();
+        setAvailableModels(models);
+      } catch (err) {
+        console.error("Error fetching available models:", err);
+        setError("Failed to load available models.");
+      }
     };
+
+    loadAvailableModels();
+  }, []);
+
+  useEffect(() => {
+    const loadModelVersions = async () => {
+      if (newForm.modelName) {
+        try {
+          const versions = await fetchModelVersions(newForm.modelName);
+          setModelVersions(versions);
+          // Reset modelVersion when modelName changes
+          setNewForm(prevForm => ({ ...prevForm, modelVersion: "" }));
+        } catch (err) {
+          console.error(`Error fetching versions for model ${newForm.modelName}:`, err);
+          setError(`Failed to load versions for model ${newForm.modelName}.`);
+          setModelVersions([]);
+        }
+      } else {
+        setModelVersions([]);
+        setNewForm(prevForm => ({ ...prevForm, modelVersion: "" }));
+      }
+    };
+
+    loadModelVersions();
+  }, [newForm.modelName]);
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {};
+
+    if (!newForm.name.trim()) {
+      newErrors.name = "El nombre del formulario es obligatorio";
+      isValid = false;
+    }
+    if (!newForm.description.trim()) {
+      newErrors.description = "La descripción del formulario es obligatoria";
+      isValid = false;
+    }
+    if (!newForm.logo.trim()) {
+      newErrors.logo = "La URL del logo es obligatoria";
+      isValid = false;
+    }
+
+    if (!newForm.questions || newForm.questions.length === 0) {
+      newErrors.questions = "Debe haber al menos una pregunta";
+      isValid = false;
+    } else {
+      const questionErrors = [];
+      newForm.questions.forEach((q, index) => {
+        const qError = {};
+        if (!q.question.trim()) {
+          qError.question = "La pregunta es obligatoria";
+          isValid = false;
+        }
+        if (!q.options || q.options.length < 2 || q.options.some(opt => !opt.trim())) {
+          qError.options = "Cada pregunta debe tener al menos 2 opciones y no pueden estar vacías";
+          isValid = false;
+        }
+        if (Object.keys(qError).length > 0) {
+          questionErrors[index] = qError;
+        }
+      });
+      if (questionErrors.length > 0) {
+        newErrors.questions = questionErrors;
+      }
+    }
+
+    if (!newForm.modelName) {
+      newErrors.modelName = "Debe seleccionar un modelo";
+      isValid = false;
+    }
+
+    if (!newForm.modelVersion) {
+      newErrors.modelVersion = "Debe seleccionar una versión del modelo";
+      isValid = false;
+    }
+
+    setError(newErrors);
+    return isValid;
+  };
 
   const handleChange = (e, questionIndex, optionIndex) => {
     const { name, value } = e.target;
@@ -82,7 +133,7 @@ const FormCreator = ({ onClose, onFormCreated }) => {
         return { ...prevForm, questions: updatedQuestions };
       });
     } else {
-      // Handling form level change (name, description, logo)
+      // Handling form level change (name, description, logo, modelName, modelVersion)
       setNewForm((prevForm) => ({
         ...prevForm,
         [name]: value,
@@ -104,16 +155,16 @@ const FormCreator = ({ onClose, onFormCreated }) => {
     }));
   };
 
-    const handleAddOption = (questionIndex) => {
-        setNewForm(prevForm => {
-            const updatedQuestions = [...prevForm.questions];
-            const currentQuestion = { ...updatedQuestions[questionIndex] };
-            const updatedOptions = [...currentQuestion.options, ""];  // Add an empty option
-            currentQuestion.options = updatedOptions;
-            updatedQuestions[questionIndex] = currentQuestion;
-            return { ...prevForm, questions: updatedQuestions };
-        });
-    };
+  const handleAddOption = (questionIndex) => {
+    setNewForm(prevForm => {
+      const updatedQuestions = [...prevForm.questions];
+      const currentQuestion = { ...updatedQuestions[questionIndex] };
+      const updatedOptions = [...currentQuestion.options, ""];  // Add an empty option
+      currentQuestion.options = updatedOptions;
+      updatedQuestions[questionIndex] = currentQuestion;
+      return { ...prevForm, questions: updatedQuestions };
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -192,6 +243,53 @@ const FormCreator = ({ onClose, onFormCreated }) => {
             placeholder="Ingrese la URL del logo"
           />
           {error?.logo && <p className="text-red-500 text-xs italic">{error.logo}</p>}
+        </div>
+
+        {/* Model Selection */}
+        <div>
+          <label htmlFor="modelName" className="block text-gray-700 text-sm font-bold mb-2">
+            Modelo <span className="text-red-500">*</span>
+          </label>
+          <select
+            id="modelName"
+            name="modelName"
+            value={newForm.modelName}
+            onChange={handleChange}
+            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+              error?.modelName ? "border-red-500" : ""
+            }`}
+            required
+          >
+            <option value="">Seleccione un modelo</option>
+            {availableModels.map(model => (
+              <option key={model} value={model}>{model}</option>
+            ))}
+          </select>
+          {error?.modelName && <p className="text-red-500 text-xs italic">{error.modelName}</p>}
+        </div>
+
+        {/* Model Version Selection */}
+        <div>
+          <label htmlFor="modelVersion" className="block text-gray-700 text-sm font-bold mb-2">
+            Versión del Modelo <span className="text-red-500">*</span>
+          </label>
+          <select
+            id="modelVersion"
+            name="modelVersion"
+            value={newForm.modelVersion}
+            onChange={handleChange}
+            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+              error?.modelVersion ? "border-red-500" : ""
+            }`}
+            required
+            disabled={!newForm.modelName || modelVersions.length === 0}
+          >
+            <option value="">Seleccione una versión</option>
+            {modelVersions.map(version => (
+              <option key={version} value={version}>{version}</option>
+            ))}
+          </select>
+          {error?.modelVersion && <p className="text-red-500 text-xs italic">{error.modelVersion}</p>}
         </div>
 
         {/* Questions Section */}

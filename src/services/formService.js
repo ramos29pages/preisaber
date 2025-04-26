@@ -57,7 +57,7 @@ const fetchForms = async () => {
     console.error("Error fetching forms service:", error);
     // Return dummy data on error, *after* logging the error
     // return dummyForms;
-  } 
+  }
 };
 
 const updateForm = async (formId, formData) => {
@@ -90,4 +90,26 @@ const fetchFormDetails = async (formId) => {
   }
 };
 
-export { fetchForms, updateForm, createForm, fetchFormDetails };
+// Función para obtener la lista de modelos disponibles
+const fetchAvailableModels = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/models`); // Ajusta la ruta según tu API
+    return response.data; // Se espera que el backend devuelva un array de nombres de modelos
+  } catch (error) {
+    console.error("Error fetching available models:", error);
+    throw error;
+  }
+};
+
+// Función para obtener las versiones de un modelo específico
+const fetchModelVersions = async (modelName) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/models/${modelName}/versions`); // Ajusta la ruta según tu API
+    return response.data; // Se espera que el backend devuelva un array de versiones del modelo
+  } catch (error) {
+    console.error(`Error fetching versions for model ${modelName}:`, error);
+    throw error;
+  }
+};
+
+export { fetchForms, updateForm, createForm, fetchFormDetails, fetchAvailableModels, fetchModelVersions };

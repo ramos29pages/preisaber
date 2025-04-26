@@ -14,7 +14,7 @@ const Register = () => {
   // const [loading, setLoading] = useState(true);
   let [_showAddButtons, setShowAddButtons] = useState(false);
 
-  const { users, user, removeUser } = useUsers();
+  const { users, user, removeUser, editUser } = useUsers();
 
   console.log("USER ACTIVE", user);
   // const [users, setUsers] = useState([]);
@@ -43,7 +43,36 @@ const Register = () => {
             text: "El usuario ha sido eliminado.",
             icon: "success",
             timer: 1500,
-            showConfirmButton: false
+            showConfirmButton: false,
+          });
+        }
+      });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      // toast.error("Error al eliminar el usuario");
+    }
+  };
+
+  //actualizar usuario
+  const handlerUpdateUser = async (user) => {
+    try {
+      Swal.fire({
+        title: "Estás seguro de actualizar ?",
+        text: "Esta accion no se puede revertir!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#F97316",
+        cancelButtonColor: "#64748B",
+        confirmButtonText: "Si, Actualiza!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await editUser(user); // Use the removeUser function from the context
+          Swal.fire({
+            title: "Hecho !",
+            text: "El usuario ha sido actualizado.",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false,
           });
         }
       });
@@ -86,7 +115,13 @@ const Register = () => {
           </button>
         </div>
 
-        <p>{filteredUsers.length}</p>
+        <p className="text-slate-400 text-xs mb-4">
+          Mostrando
+          <span className="mx-1 font-bold text-slate-400">{filteredUsers.length}</span>
+           de 
+          <span className="mx-1 font-bold text-slate-400">{users.length}</span>
+          .
+        </p>
 
         {/* Lista de usuarios con scroll */}
         <div
@@ -101,7 +136,11 @@ const Register = () => {
 
           {filteredUsers.length > 0 ? (
             filteredUsers.map((user) => (
-              <RegisterCard onUserDeleted={handlerDeleteUser} user={user} />
+              <RegisterCard
+                onUserDeleted={handlerDeleteUser}
+                onUserUpdated={handlerUpdateUser}
+                user={user}
+              />
             ))
           ) : (
             <div>

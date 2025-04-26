@@ -1,23 +1,24 @@
 import React, { useState } from "react";
-import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPaperclip,
   faEdit,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditUserModal from "./EditUserModal";
 
-
-export default function RegisterCard({ user, onUserDeleted }) {
+export default function RegisterCard({ user, onUserDeleted, onUserUpdated }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const handleDelete = async (userId) => {
     await onUserDeleted(userId);
-    toast.success
+  };
+
+  const handleUpdate = async (user) => {
+    setIsEditDialogOpen(false);
+    await onUserUpdated(user);
   };
 
   return (
@@ -69,10 +70,7 @@ export default function RegisterCard({ user, onUserDeleted }) {
           {isEditDialogOpen && (
             <EditUserModal
               user={user}
-              onUserUpdated={() => {
-                setIsEditDialogOpen(false);
-                onUserDeleted();
-              }}
+              onUserUpdated={handleUpdate}
               onClose={() => setIsEditDialogOpen(false)}
             />
           )}

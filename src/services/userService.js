@@ -68,6 +68,7 @@ export const addUser = async (user) => {
  * Actualiza todos los campos de un usuario existente.
  */
 export const updateUser = async (user) => {
+  console.log('user id to update::=> ', user.id)
   const response = await api.put(`/${user.id}`, user);
   return response.data;
 };

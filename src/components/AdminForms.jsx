@@ -15,18 +15,41 @@ const dummyForms = [
   {
     id: "dummy-1",
     name: "Dummy Form 1",
+    link_id: "tecnologica",
     description: "This is a dummy form for testing.",
+    model: 'XGBOST',
     logo: "https://via.placeholder.com/150",
-    questionCount: 10,
-    effectiveness: "50%",
+    questions: [
+      {
+        id: "q1",
+        question: "What is your name?",   
+        options : ['Option 1', 'Option 2', 'Option 3'],
+      },
+      {
+        id: "q2",
+        question: "What is your name?",   
+        options : ['Option 1', 'Option 2', 'Option 3'],
+      },
+    ]
   },
   {
     id: "dummy-2",
     name: "Dummy Form 2",
     description: "Another dummy form example.",
+    model: 'XGBOST',
     logo: "https://via.placeholder.com/150",
-    questionCount: 5,
-    effectiveness: "75%",
+    questions: [
+      {
+        id: "q1",
+        question: "What is your name?",   
+        options : ['Option 1', 'Option 2', 'Option 3'],
+      },
+      {
+        id: "q2",
+        question: "What is your name?",   
+        options : ['Option 1', 'Option 2', 'Option 3'],
+      },
+    ]
   },
 ];
 
@@ -90,14 +113,6 @@ const AdminForms = () => {
     return <Navigate to="/" replace />;
   }
 
-  // if (loading) {
-  //   return (
-  //     <div className="h-screen flex items-center justify-center">
-  //       <LoaderSquare />
-  //     </div>
-  //   );
-  // }
-
   if (error) {
     return (
       <div className="container mx-auto mt-4 h-screen flex items-center justify-center text-red-500">
@@ -136,7 +151,7 @@ const AdminForms = () => {
       )}
 
       {selectedFormId && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed top-0 left-0 w-full h-full bg-black/50 bg-opacity-50 flex justify-center items-center z-50">
           <FormEditor
             formId={selectedFormId}
             onClose={handleCloseEditor}
@@ -146,7 +161,7 @@ const AdminForms = () => {
       )}
 
       {isCreatingForm && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center z-50">
           {/* <FormCreator onClose={handleCloseCreator} onFormCreated={handleCreateFormSuccess} */}
           <AddForm
             onClose={handleCloseCreator}

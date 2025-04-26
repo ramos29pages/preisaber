@@ -1,40 +1,62 @@
 // src/services/formService.js
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:5000/forms"; // Define your base API URL
+const API_BASE_URL = "http://localhost:8000/formularios"; // Define your base API URL
 
 const api = axios.create({
   baseURL: API_BASE_URL,  // apunta directo al backend
 });
 
-const dummyForms = [
-  {
-    id: "dummy-1",
-    name: "Dummy Form 1",
-    description: "This is a dummy form for testing.",
-    logo: "images/pro.webp",
-    questionCount: 10,
-    effectiveness: "50%",
-  },
-  {
-    id: "dummy-2",
-    name: "Dummy Form 2",
-    description: "Another dummy form example.",
-    logo: "images/tyt.jpg",
-    questionCount: 5,
-    effectiveness: "75%",
-  },
-];
+// const dummyForms = [
+//   {
+//     id: "dummy-1",
+//     name: "Dummy Form 1",
+//     description: "This is a dummy form for testing.",
+//     logo: "images/pro.webp",
+//     questions: [
+//       {
+//         id: "q1",
+//         question: "What is your name?",   
+//         options : ['Option 1', 'Option 2', 'Option 3'],
+//       },
+//       {
+//         id: "q2",
+//         question: "What is your name?",   
+//         options : ['Option 1', 'Option 2', 'Option 3'],
+//       },
+//     ]
+//   },
+//   {
+//     id: "dummy-2",
+//     name: "Dummy Form 2",
+//     description: "Another dummy form example.",
+//     logo: "images/tyt.jpg",
+//     questions: [
+//       {
+//         id: "q1",
+//         question: "What is your name?",   
+//         options : ['Option 1', 'Option 2', 'Option 3'],
+//       },
+//       {
+//         id: "q2",
+//         question: "What is your name?",   
+//         options : ['Option 1', 'Option 2', 'Option 3'],
+//       },
+//     ]
+//   },
+// ];
+
 
 const fetchForms = async () => {
   try {
     const response = await api.get(API_BASE_URL);
     console.log("Response data axios:", response.data); // Debugging line
-    return response.data.length > 0 ? response.data : dummyForms;
+    return response.data;
+    // return response.data.length > 0 ? response.data : dummyForms;
   } catch (error) {
     console.error("Error fetching forms service:", error);
     // Return dummy data on error, *after* logging the error
-    return dummyForms;
+    // return dummyForms;
   } 
 };
 

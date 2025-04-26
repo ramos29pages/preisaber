@@ -1,12 +1,10 @@
 // src/components/ModelManager.jsx
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlus,
-  faSearch,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { listModels } from "../services/modelService";
 import AddModel from "./AddModel";
+import { SkeletonModel } from "./SkeletonModel";
 import TableModel from "./TableModel";
 import TableModelMobile from "./TableModelMobile";
 import { useMediaQuery } from "react-responsive";
@@ -29,6 +27,7 @@ export default function ModelManager() {
   useEffect(() => {
     async function fetchModels() {
       const data = await listModels();
+      console.log("DATA FROM USE EFECT ==> ", data);
       setModels(data || []); // Garantiza que sea un array
     }
     fetchModels();
@@ -46,8 +45,8 @@ export default function ModelManager() {
   // Filtrado por búsqueda
   const filteredModels = models.filter((model) => {
     return (
-      model.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      model.uploader?.toLowerCase().includes(searchTerm.toLowerCase())
+      model.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      model.creado_por?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
 
@@ -114,6 +113,9 @@ export default function ModelManager() {
           </div>
         </div>
 
+        {/* Mensaje si no hay modelos */}
+        {/* {models.length === 0 && <SkeletonModel />} */}
+
         {isDesktopOrLaptop && (
           <TableModel
             requestSort={requestSort}
@@ -134,66 +136,10 @@ export default function ModelManager() {
             formatDate={formatDate}
           />
         )}
-
-        {/* Mensaje si no hay modelos */}
-        {/* {models.length !== 0 && (
-          <div className="flex items-center justify-center h-64 bg-white rounded-xl shadow-md">
-            <p className="text-gray-500">Debes usar una computadora para ver esta seccion</p>
-          </div>
-        )} */}
       </div>
 
       {/* Modal Crear Modelo - Versión Mejorada con scroll */}
       {showModal && <AddModel setShowModal={setShowModal} />}
-
-      {/* Helper function para colores de precisión */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-        function getAccuracyColorClass(accuracy) {
-          const value = parseFloat(accuracy) || 0;
-          if (value >= 90) return 'bg-green-500';
-          if (value >= 70) return 'bg-orange-500';
-          return 'bg-red-500';
-        }
-      `,
-        }}
-      />
-
-      {/* Añade estas animaciones a tu archivo CSS global o a través de Tailwind */}
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes slideIn {
-          from {
-            transform: translateY(-20px);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
-        }
-
-        .animate-slideIn {
-          animation: slideIn 0.4s ease-out;
-        }
-
-        .active:scale-98:active {
-          transform: scale(0.98);
-        }
-      `}</style>
     </div>
   );
 }

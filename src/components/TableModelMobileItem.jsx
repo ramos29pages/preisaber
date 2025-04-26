@@ -11,7 +11,7 @@ function TableModelMobileItem({ model, formatAccuracy, formatDate, onOpenEditMod
             <FontAwesomeIcon icon={faRobot} size="sm" />
           </div>
           <div className="ml-3">
-            <p className="text-sm font-medium text-gray-900">{model.name}</p>
+            <p className="text-sm font-medium text-gray-900">{model.nombre}</p>
             <p className="text-xs text-gray-500">{model.id ? `ID: ${model.id.substring(0, 8)}...` : ""}</p>
           </div>
         </div>
@@ -37,13 +37,13 @@ function TableModelMobileItem({ model, formatAccuracy, formatDate, onOpenEditMod
         </div>
         <div>
           <div className="flex items-center">
-            <div className={`h-2 rounded-full bg-gray-200 w-[${parseFloat(model.accuracy) || 0}%]`}>
+            <div className={`h-2 rounded-full bg-rose-200 w-[${parseFloat(model.precision) || 0}%]`}>
               <div
                 className={`h-2 rounded-full bg-orange-500`}
-                style={{ width: `${parseFloat(model.accuracy) || 0}%` }}
+                style={{ width: `${parseFloat(model.precision) || 0}%` }}
               ></div>
             </div>
-            <span className="ml-2 text-gray-900">{formatAccuracy(model.accuracy)}</span>
+            <span className="ml-2 text-gray-900">{formatAccuracy(model.precision)}</span>
           </div>
         </div>
 
@@ -51,7 +51,7 @@ function TableModelMobileItem({ model, formatAccuracy, formatDate, onOpenEditMod
           <span className="font-semibold text-gray-700">Creado Por:</span>
         </div>
         <div>
-          <p className="text-gray-900">{model.uploader}</p>
+          <p className="text-gray-900">{model.creado_por}</p>
         </div>
 
         <div>
@@ -63,13 +63,13 @@ function TableModelMobileItem({ model, formatAccuracy, formatDate, onOpenEditMod
 
         <div className="col-span-2 mt-2">
           <a
-            href={model.fileUrl}
+            href={model.archivo}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-orange-50 hover:bg-orange-100 text-orange-500 hover:text-orange-700 px-3 py-1 rounded-full text-xs transition-colors"
           >
-            <FontAwesomeIcon icon={faDownload} size="sm" />
-            <span>Descargar</span>
+            <FontAwesomeIcon className='text-orange-500' icon={faDownload} size="sm" />
+            <span className='text-orange-500'>Descargar</span>
           </a>
         </div>
       </div>

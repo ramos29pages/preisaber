@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SkeletonModelMobile } from './skeletonMobileModel';
-import { updateUserModel, deleteModel } from '../services/modelService';
+import { updateModel, deleteModel } from '../services/modelService';
 import TableModelMobileItem from './TableModelMobileItem';
 import EditModelModal from './EditModelModal';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
@@ -30,7 +30,7 @@ export default function TableModelMobile({ searchTerm, sortedModels, formatAccur
   const handleSaveEdit = async () => {
     if (currentModel && editedUploader !== currentModel.uploader) {
       try {
-        const updatedModel = await updateUserModel(currentModel.id, { uploader: editedUploader });
+        const updatedModel = await updateModel(currentModel.id, { uploader: editedUploader });
         if (updatedModel) {
           onModelUpdated(updatedModel);
           handleCloseEditModal();
@@ -92,6 +92,7 @@ export default function TableModelMobile({ searchTerm, sortedModels, formatAccur
             <>
               <SkeletonModelMobile />
               <SkeletonModelMobile />
+              NO HAY MODELOS
             </>
           )}
         </div>

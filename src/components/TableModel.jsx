@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { faSort, faDownload, faRobot, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { SkeletonModel } from "./SkeletonModel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { updateUserModel, deleteModel } from '../services/modelService';
+import {  deleteModel, updateModel } from '../services/modelService';
 import EditModelModal from './EditModelModal'; // Import the modal
 import DeleteConfirmationModal from './DeleteConfirmationModal'; // Import the modal
 
@@ -31,7 +31,7 @@ export default function TableModel({ requestSort, sortConfig, searchTerm, sorted
   const handleSaveEdit = async () => {
     if (currentModel && editedUploader !== currentModel.uploader) {
       try {
-        const updatedModel = await updateUserModel(currentModel.id, { uploader: editedUploader });
+        const updatedModel = await updateModel(currentModel.id, { uploader: editedUploader });
         if (updatedModel) {
           onModelUpdated(updatedModel);
           handleCloseEditModal();
@@ -169,7 +169,7 @@ export default function TableModel({ requestSort, sortConfig, searchTerm, sorted
                       </div>
                       <div className="md:ml-4">
                         <div className="text-md font-medium text-gray-900">
-                          {model.name}
+                          {model.nombre}
                         </div>
                         <div className="text-xs text-gray-500">
                           {model.id ? `ID: ${model.id.substring(0, 12)}...` : ""}
@@ -179,22 +179,22 @@ export default function TableModel({ requestSort, sortConfig, searchTerm, sorted
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap md:table-cell">
                     <div className="flex items-center">
-                      <div className={`h-2.5 rounded-full bg-gray-200 w-[${parseFloat(model.accuracy) || 0}%]`}>
+                      <div className={`h-2.5 rounded-full bg-gray-200 w-[${parseFloat(model.precision) || 0}%]`}>
                         <div
                           className={`h-2.5 rounded-full bg-orange-500`}
                           style={{
-                            width: `${parseFloat(model.accuracy) || 0}%`,
+                            width: `${parseFloat(model.precision) || 0}%`,
                           }}
                         ></div>
                       </div>
                       <span className="ml-3 text-sm text-gray-900">
-                        {formatAccuracy(model.accuracy)}
+                        {formatAccuracy(model.precision)}
                       </span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                     <div className="text-sm text-gray-900">
-                      {model.uploader}
+                      {model.creado_por}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
@@ -217,7 +217,7 @@ export default function TableModel({ requestSort, sortConfig, searchTerm, sorted
                         <FontAwesomeIcon className='cursor-pointer' icon={faTrash} size="sm" />
                       </button>
                       <a
-                        href={model.fileUrl}
+                        href={model.archivo}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-orange-500 hover:text-orange-700 transition-colors inline-flex items-center gap-1 bg-orange-50 hover:bg-orange-100 px-3 py-1 rounded-full ml-2"

@@ -7,8 +7,7 @@ import { SkeletonModel } from "./SkeletonModel";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
-export default function AddModel({ setShowModal }) {
-  const [models, setModels] = useState([]);
+export default function AddModel({ setShowModal, models, setModels }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 

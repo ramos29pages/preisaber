@@ -150,7 +150,12 @@ export default function ModelManager() {
       </div>
 
       {/* Modal Crear Modelo - Versión Mejorada con scroll */}
-      {showModal && <AddModel setShowModal={setShowModal} />}
+      {showModal && <AddModel 
+      setShowModal={setShowModal} 
+      models={models}
+      setModels={setModels}
+      onModelCreated={actualizarModelos}
+      />}
     </div>
   );
 }

@@ -128,6 +128,7 @@ export default function AddModel({ setShowModal }) {
       formData.append("descripcion", descripcion || "");
       formData.append("version", version);
       formData.append("archivo", file);
+      formData.append("variables",'DEFAULT');
       
       console.log(formData.get('nombre'), 'ADDING...')
       // Procesar variables: uppercase y sin espacios

@@ -105,6 +105,7 @@ export default function TableModelMobile({ searchTerm, sortedModels, formatAccur
         editedUploader={editedUploader}
         onUploaderChange={handleUploaderChange}
         onSave={handleSaveEdit}
+        onUpdated={onModelUpdated}
       />
 
       <DeleteConfirmationModal

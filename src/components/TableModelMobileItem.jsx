@@ -15,10 +15,10 @@ function TableModelMobileItem({ model, formatAccuracy, formatDate, onOpenEditMod
             <p className="text-xs text-gray-500">{model.id ? `ID: ${model.id.substring(0, 8)}...` : ""}</p>
           </div>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center cursor-pointer">
           <button
             onClick={() => onOpenEditModal(model)}
-            className="text-indigo-500 hover:text-indigo-700 transition-colors mr-2"
+            className="text-orange-500 hover:text-orange-700 transition-colors mr-2"
           >
             <FontAwesomeIcon icon={faEdit} size="sm" />
           </button>

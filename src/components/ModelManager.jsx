@@ -23,15 +23,22 @@ export default function ModelManager() {
   const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 1023 });
 
+  async function fetchModels() {
+    const data = await listModels();
+    console.log("DATA FROM USE EFECT ==> ", data);
+    setModels(data || []); // Garantiza que sea un array
+  }
   // Carga inicial de modelos
   useEffect(() => {
-    async function fetchModels() {
-      const data = await listModels();
-      console.log("DATA FROM USE EFECT ==> ", data);
-      setModels(data || []); // Garantiza que sea un array
-    }
     fetchModels();
+    console.log(formatAccuracy(100));
   }, []);
+
+
+  const actualizarModelos =  () => {
+    fetchModels();
+    console.log('ACTUALIZACION CORRECTA')
+  }
 
   // Ordenamiento de la tabla
   const requestSort = (key) => {
@@ -124,6 +131,7 @@ export default function ModelManager() {
             sortedModels={sortedModels}
             formatAccuracy={formatAccuracy}
             formatDate={formatDate}
+            onModelUpdated={actualizarModelos}
           />
         )}
         {isMobile && (
@@ -134,6 +142,7 @@ export default function ModelManager() {
             sortedModels={sortedModels}
             formatAccuracy={formatAccuracy}
             formatDate={formatDate}
+            onModelUpdated={actualizarModelos}
           />
         )}
       </div>

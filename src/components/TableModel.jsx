@@ -65,7 +65,7 @@ export default function TableModel({
 
         const updatedModel = await updateModel(currentModel.id, dataModel);
         if (updatedModel) {
-          onModelUpdated(updatedModel);
+          onModelUpdated();
           handleCloseEditModal();
         } else {
           console.error("Error al actualizar el modelo.");
@@ -315,6 +315,7 @@ export default function TableModel({
         editedUploader={editedUploader}
         onUploaderChange={handleUploaderChange}
         onSave={handleSaveEdit}
+        onUpdated={onModelUpdated}
       />
 
       <DeleteConfirmationModal

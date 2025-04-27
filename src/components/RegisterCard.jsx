@@ -12,6 +12,7 @@ import EditUserModal from "./EditUserModal";
 export default function RegisterCard({ user, onUserDeleted, onUserUpdated }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
+  const test = false;
   const handleDelete = async (userId) => {
     await onUserDeleted(userId);
   };
@@ -45,10 +46,17 @@ export default function RegisterCard({ user, onUserDeleted, onUserUpdated }) {
             <p className="text-xs text-slate-500 truncate font-semibold w-26 md:w-50">
               {user.email}
             </p>
-            <p className="font-semibold text-xs max-w-40 text-orange-400 bg-orange-50 p-1 px-2 rounded-md">
+            <p className="text-xs text-slate-500 truncate font-semibold w-26 md:w-50">
+             Semestre {user.semester}
+            </p>
+            <p className="font-semibold text-xs max-w-40 text-rose-400 bg-red-50 p-1 px-2 rounded-md">
+              <FontAwesomeIcon icon={faPaperclip} size="s" />
+              {' Sin pruebas asignadas'}
+            </p>
+            {test &&<p className="font-semibold text-xs max-w-40 text-orange-400 bg-orange-50 p-1 px-2 rounded-md">
               <FontAwesomeIcon icon={faPaperclip} size="s" /> Prueba{" "}
               {user.tipo_prueba.toLowerCase()}
-            </p>
+            </p>}
           </div>
         </div>
         <div className="flex items-center">

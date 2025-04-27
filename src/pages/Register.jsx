@@ -1,7 +1,7 @@
 // src/pages/Register.jsx
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AddRegisterModal from "../components/AddregisterModal";
+import AddRegisterModal from "../components/AddRegisterModal";
 import { faSearch, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 // import { useNavigate } from "react-router-dom";
 import { useUsers } from "../context/UserContext";

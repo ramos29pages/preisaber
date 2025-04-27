@@ -16,7 +16,6 @@ export const UserProvider = ({ children }) => {
   // Cargar usuarios al iniciar la app
   useEffect(() => {
     fetchUsers();
-
     console.log('usuarios tods: ' , users);
 
   }, []);

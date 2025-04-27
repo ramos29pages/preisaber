@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { faTimes, faCheck, faTag, faChartLine, faUser, faCalendarAlt, faFileAlt, faCodeBranch, faCloudUploadAlt, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+// import { faTimes, faCheck, faTag, faChartLine, faUser, faCalendarAlt, faFileAlt, faCodeBranch, faCloudUploadAlt, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faCheck, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { updateModel } from '../services/modelService';
 import { toast } from 'react-toastify';

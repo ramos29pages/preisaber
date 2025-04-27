@@ -6,7 +6,7 @@ function DeleteConfirmationModal({ isOpen, onClose, model, onConfirmDelete }) {
   }
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-black/50 bg-opacity-50 flex justify-center items-center z-50">
+    <div className="fixed animate__animated animate__fadeIn animate__faster top-0 left-0 w-full h-full bg-black/50 bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-xl animate__animated animate__fadeIn animate__faster shadow-lg p-6 w-full max-w-sm">
         <h2 className="text-xl font-semibold mb-4 text-red-600">Eliminar Modelo</h2>
         <p className="mb-4">¿Estás seguro de que deseas eliminar este modelo?</p>

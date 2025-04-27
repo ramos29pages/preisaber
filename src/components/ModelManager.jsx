@@ -132,6 +132,7 @@ export default function ModelManager() {
             formatAccuracy={formatAccuracy}
             formatDate={formatDate}
             onModelUpdated={actualizarModelos}
+            onModelDeleted={actualizarModelos}
           />
         )}
         {isMobile && (
@@ -143,6 +144,7 @@ export default function ModelManager() {
             formatAccuracy={formatAccuracy}
             formatDate={formatDate}
             onModelUpdated={actualizarModelos}
+            onModelDeleted={actualizarModelos}
           />
         )}
       </div>

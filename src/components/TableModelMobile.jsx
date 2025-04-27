@@ -72,7 +72,7 @@ export default function TableModelMobile({ searchTerm, sortedModels, formatAccur
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden">
+    <div className="bg-white rounded-xl shadow-md overflow-y-scroll h-140">
       {sortedModels.length > 0 ? (
         sortedModels.map((model, index) => (
           <TableModelMobileItem

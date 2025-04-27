@@ -106,9 +106,9 @@ export default function TableModel({
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden">
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto overflow-y-scroll h-110">
         <table className="md:min-w-full divide-y divide-orange-500">
-          <thead className="bg-gray-100">
+          <thead className="bg-gray-100 sticky top-0">
             <tr>
               <th
                 className="md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
@@ -187,7 +187,7 @@ export default function TableModel({
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white divide-y  divide-gray-200">
             {sortedModels.length > 0 ? (
               sortedModels.map((model, index) => (
                 <tr

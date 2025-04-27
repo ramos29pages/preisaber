@@ -5,6 +5,7 @@ import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { listModels, createModel } from "../services/modelService";
 import { SkeletonModel } from "./SkeletonModel";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 export default function AddModel({ setShowModal }) {
   const [models, setModels] = useState([]);
@@ -28,17 +29,17 @@ export default function AddModel({ setShowModal }) {
   const fileInputRef = useRef(null);
   const modalContentRef = useRef(null);
 
+  async function fetchModels() {
+    try {
+      const data = await listModels();
+      setModels(data || []);
+    } catch (error) {
+      console.error("Error al cargar modelos:", error);
+      toast.error("Error al cargar los modelos");
+    }
+  }
   // Carga inicial de modelos
   useEffect(() => {
-    async function fetchModels() {
-      try {
-        const data = await listModels();
-        setModels(data || []);
-      } catch (error) {
-        console.error("Error al cargar modelos:", error);
-        toast.error("Error al cargar los modelos");
-      }
-    }
     fetchModels();
   }, []);
 
@@ -136,10 +137,20 @@ export default function AddModel({ setShowModal }) {
       variables.forEach(v => formData.append("variables", v.toUpperCase().replace(/\s+/g, "")));
 
       const newModel = await createModel(formData);
-      setModels(prev => [newModel, ...prev]);
       toast.success('Modelo creado exitosamente');
-      setShowModal(false);
-      clearForm();
+      if(newModel){
+        Swal.fire({
+          
+          text: 'Creado con exito',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1300
+        });
+        fetchModels();
+        setModels(prev => [newModel, ...prev])
+        setShowModal(false);
+        clearForm();
+      }
     } catch (error) {
       console.error("Error al crear el modelo:", error);
       const errorMessage = error.response?.data?.detail || error.message || "Error desconocido al crear el modelo";

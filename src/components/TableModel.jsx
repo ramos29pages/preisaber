@@ -1,37 +1,69 @@
-import React, { useState } from 'react';
-import { faSort, faDownload, faRobot, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from "react";
+import {
+  faSort,
+  faDownload,
+  faRobot,
+  faEdit,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { SkeletonModel } from "./SkeletonModel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {  deleteModel, updateModel } from '../services/modelService';
-import EditModelModal from './EditModelModal'; // Import the modal
-import DeleteConfirmationModal from './DeleteConfirmationModal'; // Import the modal
+import { deleteModel, updateModel } from "../services/modelService";
+import EditModelModal from "./EditModelModal"; // Import the modal
+import DeleteConfirmationModal from "./DeleteConfirmationModal"; // Import the modal
 
-export default function TableModel({ requestSort, sortConfig, searchTerm, sortedModels, formatAccuracy, formatDate, onModelUpdated, onModelDeleted }) {
+export default function TableModel({
+  requestSort,
+  sortConfig,
+  searchTerm,
+  sortedModels,
+  formatAccuracy,
+  formatDate,
+  onModelUpdated,
+  onModelDeleted,
+}) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentModel, setCurrentModel] = useState(null);
-  const [editedUploader, setEditedUploader] = useState('');
-  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+  const [editedUploader, setEditedUploader] = useState("");
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+    useState(false);
 
   const handleOpenEditModal = (model) => {
     setCurrentModel(model);
-    setEditedUploader(model.uploader);
+    setEditedUploader(model.creado_por);
     setIsEditModalOpen(true);
   };
 
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
     setCurrentModel(null);
-    setEditedUploader('');
+    setEditedUploader("");
   };
 
   const handleUploaderChange = (event) => {
     setEditedUploader(event.target.value);
   };
 
-  const handleSaveEdit = async () => {
-    if (currentModel && editedUploader !== currentModel.uploader) {
+  const handleSaveEdit = async (dataModel) => {
+    if (currentModel) {
       try {
-        const updatedModel = await updateModel(currentModel.id, { uploader: editedUploader });
+        let formData = new FormData();
+
+        formData.append("nombre", dataModel.nombre || currentModel.nombre);
+        formData.append("precision", dataModel.precision || currentModel.precision);
+        formData.append("creado_por", dataModel.creado_por || currentModel.creado_por);
+        formData.append("date", dataModel.date || currentModel.date);
+        formData.append("descripcion", dataModel.descripcion || currentModel.descripcion);
+        formData.append("version", dataModel.version || currentModel.version);
+        formData.append("archivo", dataModel.archivo || currentModel.archivo);
+
+        // Procesar variables: uppercase y sin espacios
+        currentModel.variables.forEach((v) => console.log("VAR=> ", v));
+        currentModel.variables.forEach((v) =>
+          formData.append("variables", v.toUpperCase().replace(/\s+/g, ""))
+        );
+
+        const updatedModel = await updateModel(currentModel.id, dataModel);
         if (updatedModel) {
           onModelUpdated(updatedModel);
           handleCloseEditModal();
@@ -172,14 +204,20 @@ export default function TableModel({ requestSort, sortConfig, searchTerm, sorted
                           {model.nombre}
                         </div>
                         <div className="text-xs text-gray-500">
-                          {model.id ? `ID: ${model.id.substring(0, 12)}...` : ""}
+                          {model.id
+                            ? `ID: ${model.id.substring(0, 12)}...`
+                            : ""}
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap md:table-cell">
                     <div className="flex items-center">
-                      <div className={`h-2.5 rounded-full bg-gray-200 w-[${parseFloat(model.precision) || 0}%]`}>
+                      <div
+                        className={`h-2.5 rounded-full bg-gray-200 w-[${
+                          parseFloat(model.precision) || 0
+                        }%]`}
+                      >
                         <div
                           className={`h-2.5 rounded-full bg-orange-500`}
                           style={{
@@ -208,13 +246,21 @@ export default function TableModel({ requestSort, sortConfig, searchTerm, sorted
                         onClick={() => handleOpenEditModal(model)}
                         className="text-indigo-500 hover:text-indigo-700 transition-colors mr-2"
                       >
-                        <FontAwesomeIcon className='cursor-pointer hover:scale-120' icon={faEdit} size="sm" />
+                        <FontAwesomeIcon
+                          className="cursor-pointer hover:scale-120"
+                          icon={faEdit}
+                          size="sm"
+                        />
                       </button>
                       <button
                         onClick={() => handleOpenDeleteConfirmation(model)}
                         className="text-red-500 hover:text-red-700 transition-colors"
                       >
-                        <FontAwesomeIcon className='cursor-pointer' icon={faTrash} size="sm" />
+                        <FontAwesomeIcon
+                          className="cursor-pointer"
+                          icon={faTrash}
+                          size="sm"
+                        />
                       </button>
                       <a
                         href={model.archivo}
@@ -222,8 +268,12 @@ export default function TableModel({ requestSort, sortConfig, searchTerm, sorted
                         rel="noopener noreferrer"
                         className="text-orange-500 hover:text-orange-700 transition-colors inline-flex items-center gap-1 bg-orange-50 hover:bg-orange-100 px-3 py-1 rounded-full ml-2"
                       >
-                        <FontAwesomeIcon className='text-orange-500' icon={faDownload} size="sm" />
-                        <span className='text-orange-500'>Descargar</span>
+                        <FontAwesomeIcon
+                          className="text-orange-500"
+                          icon={faDownload}
+                          size="sm"
+                        />
+                        <span className="text-orange-500">Descargar</span>
                       </a>
                     </div>
                   </td>

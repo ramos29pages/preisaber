@@ -73,8 +73,9 @@ const Preview = () => {
           icon: "warning",
           html:
             `<p>No se guardarán estos correos:</p>` +
-            `<ul style="text-align:left">${duplicates.map(e => `<li>${e}</li>`).join("")}</ul>`,
-          confirmButtonText: "Entendido"
+            `<ul style="text-align:center; margin-top: 10px; font-size: 0.8rem">${duplicates.map(e => `<li>${e}</li>`).join("")}</ul>`,
+          confirmButtonText: "Entendido",
+          confirmButtonColor: '#FF6E00'
         });
       }
 

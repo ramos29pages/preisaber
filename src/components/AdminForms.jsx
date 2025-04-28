@@ -142,7 +142,7 @@ const AdminForms = () => {
   }
 
   return (
-    <div className="container mx-auto mt-2 h-screen">
+    <div className="container animate__animated animate__fadeIn animate__fast mx-auto mt-2 h-screen">
       <div className="flex justify-between items-center  mb-4 px-2">
         <h1 className="text-2xl text-orange-500 font-bold">
           Gestion de formularios

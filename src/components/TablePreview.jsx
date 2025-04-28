@@ -17,9 +17,9 @@ export default function TablePreview({ data }) {
       name: row.nombre,
       email: row.correo,
       role: row.role ? row.role : "estudiante",
-      semester: "5",
+      semester: row.semestre || "0",
       identificacion: row.identificacion,
-      tipo_prueba: row.tipo_prueba,
+      tipo_prueba: row.tipo_prueba || 'tecnologica',
       picture: `https://thumbs.dreamstime.com/b/default-avatar-profile-image-vector-social-media-user-icon-potrait-182347582.jpg`,
     };
   };
@@ -42,6 +42,7 @@ export default function TablePreview({ data }) {
       errors.identificacion = "La identificación debe ser un número válido.";
     }
 
+    console.log(user.tipo_prueba);
     // Validar tipo de prueba
     const tipo = user.tipo_prueba.toLowerCase();
     if (tipo !== "tecnologica" && tipo !== "profesional") {
@@ -71,13 +72,14 @@ export default function TablePreview({ data }) {
     try {
       for (let row of data) {
         const transformed = transformUser(row);
+        console.log(transformed);
         await createUser(transformed);
       }
       // Una vez guardados, redirigir a la ruta de registros
       navigate("/registros");
     } catch (error) {
       console.error("Error al guardar:", error);
-      setSaveError("Ocurrió un error al guardar los datos.");
+      setSaveError(`Ocurrió un error al guardar los datos.${error}`);
     } finally {
       setSaving(false);
     }
@@ -88,7 +90,7 @@ export default function TablePreview({ data }) {
   };
 
   return (
-    <div className="max-w-screen flex flex-col h-[calc(100vh-100px)] p-4 bg-rose-50">
+    <div className="max-w-screen flex flex-col h-[calc(100vh-100px)] p-4 bg-slate-50">
       <h1 className="text-2xl font-bold text-orange-500 mb-4 text-center">
         Vista previa de datos
       </h1>
@@ -107,6 +109,9 @@ export default function TablePreview({ data }) {
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider hidden md:table-cell">
                   Correo Institucional
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider hidden md:table-cell">
+                  Semestre
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                   Tipo de prueba
@@ -127,6 +132,9 @@ export default function TablePreview({ data }) {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 hidden md:table-cell">
                     {row.correo}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 hidden md:table-cell">
+                    {row.semestre}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                     {row.tipo_prueba}

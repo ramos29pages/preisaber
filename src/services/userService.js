@@ -33,6 +33,11 @@ export const getUserById= async (email) => {
   return response.data;
 };
 
+export const getUserByEmail= async (email) => {
+  const response = await api.get('/email/' + email);
+  return response.data;
+};
+
 /**
  * Crea un nuevo usuario; si no tiene foto,
  * asigna la DEFAULT_PICTURE.

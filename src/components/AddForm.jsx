@@ -95,7 +95,7 @@ const AddForm = ({ onClose, onFormCreated }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed animate__animated animate__fadeIn animate__fast inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-60">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden">
         {/* Header */}
         <div className="px-6 py-4 bg-orange-500 text-white flex justify-between items-center">

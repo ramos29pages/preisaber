@@ -8,8 +8,8 @@ const AddForm = ({ onClose, onFormCreated }) => {
     description: "",
     logo: "",
     questions: [{ id: crypto.randomUUID(), question: "", options: ["", ""] }],
-    modelName: "",
-    modelVersion: ""
+    model_name: "",
+    model_version: "1"
   });
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
@@ -21,22 +21,22 @@ const AddForm = ({ onClose, onFormCreated }) => {
       try {
         setAvailableModels(await listModelNames());
       } catch {
-        setError(e => ({ ...e, modelName: "No se pudieron cargar modelos" }));
+        setError(e => ({ ...e, model_name: "No se pudieron cargar modelos" }));
       }
     })();
   }, []);
 
   useEffect(() => {
-    if (!newForm.modelName) return setModelVersions([]);
+    if (!newForm.model_name) return setModelVersions([]);
     (async () => {
       try {
-        setModelVersions(await listModelVersionsByName(newForm.modelName));
-        setNewForm(f => ({ ...f, modelVersion: "" }));
+        setModelVersions(await listModelVersionsByName(newForm.model_name));
+        setNewForm(f => ({ ...f, model_version: "" }));
       } catch {
-        setError(e => ({ ...e, modelVersion: "No se pudieron cargar versiones" }));
+        setError(e => ({ ...e, model_version: "No se pudieron cargar versiones" }));
       }
     })();
-  }, [newForm.modelName]);
+  }, [newForm.model_name]);
 
   const handleChange = (e, qIndex, optIndex) => {
     const { name, value } = e.target;
@@ -57,8 +57,8 @@ const AddForm = ({ onClose, onFormCreated }) => {
     if (!newForm.name.trim()) errs.name = "Nombre obligatorio";
     if (!newForm.description.trim()) errs.description = "Descripción obligatoria";
     if (!newForm.logo.trim()) errs.logo = "Logo obligatorio";
-    if (!newForm.modelName) errs.modelName = "Seleccione un modelo";
-    if (!newForm.modelVersion) errs.modelVersion = "Seleccione versión";
+    if (!newForm.model_name) errs.model_name = "Seleccione un modelo";
+    if (!newForm.model_version) errs.model_version = "Seleccione versión";
     if (!newForm.questions.length) errs.questions = "Debe haber al menos una pregunta";
     setError(errs);
     return !Object.keys(errs).length;
@@ -109,58 +109,59 @@ const AddForm = ({ onClose, onFormCreated }) => {
             <div>
               <label className="block mb-1">Nombre*</label>
               <input name="name" value={newForm.name} onChange={handleChange}
-                     className="w-full border rounded p-2" />
+                     className="w-full border border-gray-300 rounded p-2" />
               {error.name && <p className="text-red-500">{error.name}</p>}
             </div>
             <div>
               <label className="block mb-1">Descripción*</label>
               <textarea name="description" value={newForm.description}
                         onChange={handleChange}
-                        className="w-full border rounded p-2" />
+                        className="w-full border border-gray-300 rounded p-2" />
               {error.description && <p className="text-red-500">{error.description}</p>}
             </div>
             <div>
               <label className="block mb-1">Logo URL*</label>
               <input name="logo" value={newForm.logo} onChange={handleChange}
-                     className="w-full border rounded p-2" />
+                     className="w-full border border-gray-300 rounded p-2" />
               {error.logo && <p className="text-red-500">{error.logo}</p>}
             </div>
             {/* Modelo y versión */}
             <div>
               <label className="block mb-1">Modelo*</label>
-              <select name="modelName" value={newForm.modelName}
+              <select name="model_name" value={newForm.model_name}
                       onChange={handleChange}
-                      className="w-full border rounded p-2">
+                      className="w-full border border-gray-300 rounded p-2">
                 <option value="">-- Seleccione --</option>
                 {availableModels.map(n => <option key={n} value={n}>{n}</option>)}
               </select>
-              {error.modelName && <p className="text-red-500">{error.modelName}</p>}
+              {error.model_name && <p className="text-red-500">{error.model_name}</p>}
             </div>
             <div>
               <label className="block mb-1">Versión*</label>
-              <select name="modelVersion" value={newForm.modelVersion}
+              <select name="model_version" value={newForm.model_version}
                       onChange={handleChange}
                       disabled={!modelVersions.length}
-                      className="w-full border rounded p-2">
+                      className="w-full border border-gray-300 rounded p-2">
                 <option value="">-- Seleccione --</option>
                 {modelVersions.map(v => <option key={v} value={v}>{v}</option>)}
               </select>
-              {error.modelVersion && <p className="text-red-500">{error.modelVersion}</p>}
+              {error.model_version && <p className="text-red-500">{error.model_version}</p>}
             </div>
+
             {/* Preguntas dinámicas */}
             <div>
               <h3 className="text-lg font-semibold text-orange-600 mb-2">Preguntas</h3>
               {newForm.questions.map((q, qi) => (
-                <div key={q.id} className="mb-4 border rounded p-4">
+                <div key={q.id} className="mb-4 border border-gray-300 rounded p-4">
                   <input name="question" value={q.question}
                          onChange={e => handleChange(e, qi)}
                          placeholder={`Pregunta ${qi+1}`}
-                         className="w-full border rounded p-2 mb-2" />
+                         className="w-full border border-gray-300 rounded p-2 mb-2" />
                   {q.options.map((opt, oi) => (
                     <input key={oi} name="option" value={opt}
                            onChange={e => handleChange(e, qi, oi)}
                            placeholder={`Opción ${oi+1}`}
-                           className="w-full border rounded p-2 mb-1" />
+                           className="w-full border border-gray-300 rounded p-2 mb-1" />
                   ))}
                   <button type="button"
                           onClick={() => handleAddOption(qi)}

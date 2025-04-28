@@ -80,6 +80,17 @@ const createForm = async (formData) => {
   }
 };
 
+const deleteForm = async (formId)=>{
+  try {
+    const response = await api.delete(`${API_BASE_URL}/${formId}`);
+    return response.data
+  } catch (error) {
+    console.error(`Error fetching form details for ID ${formId}`, error);
+    throw error;
+  }
+
+}
+
 const fetchFormDetails = async (formId) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/${formId}`);
@@ -112,4 +123,4 @@ const fetchModelVersions = async (modelName) => {
   }
 };
 
-export { fetchForms, updateForm, createForm, fetchFormDetails, fetchAvailableModels, fetchModelVersions };
+export { fetchForms, updateForm, deleteForm, createForm, fetchFormDetails, fetchAvailableModels, fetchModelVersions };

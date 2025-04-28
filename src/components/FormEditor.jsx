@@ -1,318 +1,204 @@
 import React, { useState, useEffect } from "react";
 import { updateForm, fetchFormDetails } from "../services/formService";
+import { listModelNames, listModelVersionsByName } from "../services/modelService";
 import Loader from './Loader';
 
-const FormEditor = ({ formId, onClose, onFormUpdated }) => {
+const FormEditor = ({ formId, onClose, onDelete, onFormUpdated }) => {
   const [formDetails, setFormDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState({});
+  const [availableModels, setAvailableModels] = useState([]);
+  const [modelVersions, setModelVersions] = useState([]);
 
+  // Carga inicial de detalles y de modelos disponibles
   useEffect(() => {
-    const loadFormDetails = async () => {
+    const loadData = async () => {
       setLoading(true);
-      setError(null);
       try {
-        const fetchedFormDetails = await fetchFormDetails(formId);
-        setFormDetails(fetchedFormDetails);
-      } catch (error) {
-        console.error("Error fetching form details:", error);
-        setError("Failed to load form details.");
+        const [details, models] = await Promise.all([
+          fetchFormDetails(formId),
+          listModelNames(),
+        ]);
+        setFormDetails({
+          ...details,
+          model_name: details.model_name ?? "",
+          model_version: String(details.model_version ?? details.version ?? "")
+        });
+        setAvailableModels(models);
+      } catch (err) {
+        console.error(err);
+        setError({ load: "Error cargando formulario o modelos" });
       } finally {
         setLoading(false);
       }
     };
-
-    loadFormDetails();
+    loadData();
   }, [formId]);
 
-    const validateForm = () => {
-        let isValid = true;
-        const newErrors = {};
-
-        if (!formDetails.name.trim()) {
-            newErrors.name = "El nombre del formulario es obligatorio";
-            isValid = false;
+  // Cuando cambia el modelo, recargar versiones
+  useEffect(() => {
+    if (!formDetails?.model_name) {
+      setModelVersions([]);
+      return;
+    }
+    const loadVersions = async () => {
+      try {
+        const raw = await listModelVersionsByName(formDetails.model_name);
+        const versions = raw.map(v => String(v));
+        setModelVersions(versions);
+        // Si la versión actual no está en la lista, resetear
+        if (!versions.includes(formDetails.model_version)) {
+          setFormDetails(f => ({ ...f, model_version: "" }));
         }
-        if (!formDetails.description.trim()) {
-            newErrors.description = "La descripción del formulario es obligatoria";
-            isValid = false;
-        }
-        if (!formDetails.logo.trim()) {
-            newErrors.logo = "La URL del logo es obligatoria";
-            isValid = false;
-        }
-
-        if (!formDetails.questions || formDetails.questions.length === 0) {
-            newErrors.questions = "Debe haber al menos una pregunta";
-            isValid = false;
-        } else {
-            const questionErrors = [];
-            formDetails.questions.forEach((q, index) => {
-                const qError = {};
-                if (!q.question.trim()) {
-                    qError.question = "La pregunta es obligatoria";
-                    isValid = false;
-                }
-                if (!q.options || q.options.length < 2 || q.options.some(opt => !opt.trim())) {
-                    qError.options = "Cada pregunta debe tener al menos 2 opciones y no pueden estar vacías";
-                    isValid = false;
-                }
-                if (Object.keys(qError).length > 0) {
-                    questionErrors[index] = qError;
-                }
-            });
-            if (questionErrors.length > 0) {
-                newErrors.questions = questionErrors;
-            }
-        }
-        setError(newErrors);
-        return isValid;
+      } catch (err) {
+        console.error(err);
+        setError(e => ({ ...e, model_version: "No se pudieron cargar versiones" }));
+      }
     };
+    loadVersions();
+  }, [formDetails?.model_name]);
 
-  const handleChange = (e, questionIndex, optionIndex) => {
+  const validateForm = () => {
+    const errs = {};
+    if (!formDetails.name?.trim()) errs.name = "Nombre obligatorio";
+    if (!formDetails.description?.trim()) errs.description = "Descripción obligatoria";
+    if (!formDetails.logo?.trim()) errs.logo = "Logo obligatorio";
+    if (!formDetails.model_name) errs.model_name = "Seleccione un modelo";
+    if (!formDetails.model_version) errs.model_version = "Seleccione versión";
+    if (!formDetails.questions?.length) errs.questions = "Debe haber al menos una pregunta";
+    setError(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleChange = (e, qIndex, optIndex) => {
     const { name, value } = e.target;
-
-    if (questionIndex !== undefined) {
-      setFormDetails((prevForm) => {
-        const updatedQuestions = [...prevForm.questions];
-        const currentQuestion = { ...updatedQuestions[questionIndex] };
-
-        if (name === "question") {
-          currentQuestion.question = value;
-        } else if (name === "option") {
-          const updatedOptions = [...currentQuestion.options];
-          updatedOptions[optionIndex] = value;
-          currentQuestion.options = updatedOptions;
-        }
-
-        updatedQuestions[questionIndex] = currentQuestion;
-        return { ...prevForm, questions: updatedQuestions };
+    if (qIndex !== undefined) {
+      setFormDetails(prev => {
+        const qs = [...prev.questions];
+        const q = { ...qs[qIndex] };
+        if (name === "question") q.question = value;
+        else if (name === "option") q.options[optIndex] = value;
+        qs[qIndex] = q;
+        return { ...prev, questions: qs };
       });
     } else {
-      setFormDetails((prevForm) => ({
-        ...prevForm,
-        [name]: value,
-      }));
+      setFormDetails(prev => ({ ...prev, [name]: value }));
+      // limpiar error de campo
+      setError(prev => ({ ...prev, [name]: "" }));
     }
   };
 
   const handleAddQuestion = () => {
-    setFormDetails((prevForm) => ({
-      ...prevForm,
-      questions: [
-        ...prevForm.questions,
-        {
-          id: crypto.randomUUID(),
-          question: "",
-          options: ["", "", ""],
-        },
-      ],
+    setFormDetails(prev => ({
+      ...prev,
+      questions: [...prev.questions, { id: crypto.randomUUID(), question: "", options: ["", ""] }]
     }));
   };
 
-    const handleAddOption = (questionIndex) => {
-        setFormDetails(prevForm => {
-            const updatedQuestions = [...prevForm.questions];
-            const currentQuestion = { ...updatedQuestions[questionIndex] };
-            const updatedOptions = [...currentQuestion.options, ""];
-            currentQuestion.options = updatedOptions;
-            updatedQuestions[questionIndex] = currentQuestion;
-            return { ...prevForm, questions: updatedQuestions };
-        });
-    };
-
+  const handleAddOption = (qIndex) => {
+    setFormDetails(prev => {
+      const qs = [...prev.questions];
+      qs[qIndex] = { ...qs[qIndex], options: [...qs[qIndex].options, ""] };
+      return { ...prev, questions: qs };
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-     if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
     setLoading(true);
-    setError(null);
     try {
       await updateForm(formId, formDetails);
       onFormUpdated();
     } catch (err) {
-      console.error("Error updating form:", err);
-      setError("Failed to update form.");
+      console.error(err);
+      setError({ submit: "Error al guardar cambios" });
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="fixed top-0 left-0 w-full h-full bg-black/50 bg-opacity-50 flex justify-center items-center z-50">
-        <Loader />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="fixed top-0 left-0 w-full h-full bg-black/50 bg-opacity-50 flex justify-center items-center z-50 text-red-500">
-        {error}
-      </div>
-    );
-  }
-
-  if (!formDetails) {
-    return null;
-  }
+  if (loading) return <div className="flex justify-center p-6"><Loader/></div>;
+  if (error.load) return <div className="text-red-500 p-6">{error.load}</div>;
 
   return (
-    <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-2xl overflow-y-auto max-h-[80vh]">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto">
       <h2 className="text-2xl font-bold mb-4 text-orange-600">Editar Formulario</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-        {/* Form Fields */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Nombre, descripción, logo */}
         <div>
-          <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
-            Nombre <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formDetails.name || ""}
-            onChange={(e) => handleChange(e)}
-            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-              error?.name ? "border-red-500" : ""
-            }`}
-            required
-            placeholder="Ingrese el nombre del formulario"
-          />
-          {error?.name && <p className="text-red-500 text-xs italic">{error.name}</p>}
+          <label className="block mb-1">Nombre*</label>
+          <input name="name" value={formDetails.name} onChange={handleChange}
+            className={`w-full border ${error.name ? 'border-red-500' : 'border-gray-300'} rounded p-2`} />
+          {error.name && <p className="text-red-500 text-sm">{error.name}</p>}
         </div>
         <div>
-          <label htmlFor="description" className="block text-gray-700 text-sm font-bold mb-2">
-            Descripción <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={formDetails.description || ""}
-            onChange={(e) => handleChange(e)}
-            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-              error?.description ? "border-red-500" : ""
-            }`}
-            required
-            placeholder="Ingrese la descripción del formulario"
-          />
-          {error?.description && <p className="text-red-500 text-xs italic">{error.description}</p>}
+          <label className="block mb-1">Descripción*</label>
+          <textarea name="description" value={formDetails.description} onChange={handleChange}
+            className={`w-full border ${error.description ? 'border-red-500' : 'border-gray-300'} rounded p-2`} />
+          {error.description && <p className="text-red-500 text-sm">{error.description}</p>}
         </div>
         <div>
-          <label htmlFor="logo" className="block text-gray-700 text-sm font-bold mb-2">
-            URL del Logo <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="logo"
-            name="logo"
-            value={formDetails.logo || ""}
-            onChange={(e) => handleChange(e)}
-            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-              error?.logo ? "border-red-500" : ""
-            }`}
-            required
-            placeholder="Ingrese la URL del logo"
-          />
-          {error?.logo && <p className="text-red-500 text-xs italic">{error.logo}</p>}
+          <label className="block mb-1">Logo URL*</label>
+          <input name="logo" value={formDetails.logo} onChange={handleChange}
+            className={`w-full border ${error.logo ? 'border-red-500' : 'border-gray-300'} rounded p-2`} />
+          {error.logo && <p className="text-red-500 text-sm">{error.logo}</p>}
         </div>
 
-        {/* Questions Section */}
+        {/* Modelo y versión */}
         <div>
-          <h3 className="text-lg font-semibold mb-4">Preguntas</h3>
-           {error?.questions && typeof error.questions === 'string' && (
-            <p className="text-red-500 text-sm italic mb-4">{error.questions}</p>
+          <label className="block mb-1">Modelo*</label>
+          <select name="model_name" value={formDetails.model_name} onChange={handleChange}
+            className="w-full border border-gray-300 rounded p-2">
+            <option value="">-- Seleccione --</option>
+            {availableModels.map(n => <option key={n} value={n}>{n}</option>)}
+          </select>
+          {error.model_name && <p className="text-red-500 text-sm">{error.model_name}</p>}
+        </div>
+        <div>
+          <label className="block mb-1">Versión*</label>
+          <select key={modelVersions.join(",")} name="model_version" value={formDetails.model_version} onChange={handleChange}
+            disabled={!modelVersions.length}
+            className="w-full border border-gray-300 rounded p-2">
+            <option value="">-- Seleccione --</option>
+            {modelVersions.map(v => <option key={v} value={v}>{v}</option>)}
+          </select>
+          {error.model_version && <p className="text-red-500 text-sm">{error.model_version}</p>}
+        </div>
+
+        {/* Preguntas dinámicas */}
+        <div>
+          <h3 className="text-lg font-semibold text-orange-600 mb-2">Preguntas</h3>
+          {error.questions && typeof error.questions === 'string' && (
+            <p className="text-red-500 text-sm mb-2">{error.questions}</p>
           )}
-          {formDetails.questions.map((question, questionIndex) => (
-            <div key={question.id} className="mb-6 p-4 rounded-md border border-gray-200">
-              <div className="mb-4">
-                <label
-                  htmlFor={`question-${questionIndex}`}
-                  className="block text-orange-500 text-sm font-bold mb-2"
-                >
-                  Pregunta {questionIndex + 1} <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id={`question-${questionIndex}`}
-                  name="question"
-                  value={question.question || ""}
-                  onChange={(e) => handleChange(e, questionIndex)}
-                  className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                    error?.questions?.[questionIndex]?.question ? "border-red-500" : ""
-                  }`}
-                  required
-                  placeholder={`Ingrese la pregunta ${questionIndex + 1}`}
-                />
-                {error?.questions?.[questionIndex]?.question && (
-                  <p className="text-red-500 text-xs italic">
-                    {error.questions[questionIndex].question}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Opciones <span className="text-red-500">*</span>
-                </label>
-                {question.options.map((option, optionIndex) => (
-                  <div key={optionIndex} className="mb-2 flex gap-2">
-                    <input
-                      type="text"
-                      name="option"
-                      value={option || ""}
-                      onChange={(e) => handleChange(e, questionIndex, optionIndex)}
-                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                        error?.questions?.[questionIndex]?.options ? "border-red-500" : ""
-                      }`}
-                      required
-                      placeholder={`Opción ${optionIndex + 1}`}
-                    />
-                  </div>
-                ))}
-                 {error?.questions?.[questionIndex]?.options && (
-                  <p className="text-red-500 text-xs italic">
-                    {error.questions[questionIndex].options}
-                  </p>
-                )}
-                <button
-                  type="button"
-                  className="text-orange-500 hover:text-orange-700 underline font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline mt-2"
-                  onClick={() => handleAddOption(questionIndex)}
-                >
-                  + Añadir Opción
-                </button>
-              </div>
+          {formDetails.questions.map((q, qi) => (
+            <div key={q.id} className="mb-4 border border-gray-200 rounded p-4">
+              <input name="question" value={q.question} onChange={e => handleChange(e, qi)}
+                placeholder={`Pregunta ${qi+1}`} className="w-full border border-gray-300 rounded p-2 mb-2" />
+              {error.questions?.[qi]?.question && <p className="text-red-500 text-sm">{error.questions[qi].question}</p>}
+              {q.options.map((opt, oi) => (
+                <input key={oi} name="option" value={opt} onChange={e => handleChange(e, qi, oi)}
+                  placeholder={`Opción ${oi+1}`} className="w-full border border-gray-300 rounded p-2 mb-1" />
+              ))}
+              {error.questions?.[qi]?.options && <p className="text-red-500 text-sm">{error.questions[qi].options}</p>}
+              <button type="button" onClick={() => handleAddOption(qi)} className="text-sm text-orange-500">+ Añadir Opción</button>
             </div>
           ))}
-          <button
-            type="button"
-            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleAddQuestion}
-          >
-            Añadir Pregunta
+          <button type="button" onClick={handleAddQuestion} className="bg-orange-500 text-white px-4 py-2 rounded">
+            + Añadir Pregunta
           </button>
         </div>
 
-        {/* Submit and Cancel Buttons */}
+        {/* Acciones */}
         <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={onClose}
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            disabled={loading}
-          >
-            {loading ? "Guardando..." : "Guardar Cambios"}
+          <button type="button" onClick={onClose} className="bg-gray-300 px-4 py-2 rounded">Cancelar</button>
+          <button type="button" onClick={() => onDelete(formId)} className="bg-red-500 text-white px-4 py-2 rounded">Eliminar</button>
+          <button type="submit" disabled={loading} className="bg-orange-500 text-white px-4 py-2 rounded">
+            {loading ? 'Guardando...' : 'Guardar Cambios'}
           </button>
         </div>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {error.submit && <p className="text-red-500 text-sm mt-2">{error.submit}</p>}
       </form>
     </div>
   );

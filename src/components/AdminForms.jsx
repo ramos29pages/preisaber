@@ -5,11 +5,10 @@ import { useAuth } from "../context/AuthContext";
 import FormCard from "../components/FormCard";
 import FormEditor from "../components/FormEditor";
 // import { FormCreator } from "../components/FormCreator";
-import { fetchForms as getForms } from "../services/formService"; // Import the service functions
+import { fetchForms as getForms, deleteForm } from "../services/formService"; // Import the service functions
 import AddForm from "./AddForm";
-import Loader from "./Loader";
-import LoaderSquare from "./LoaderSquare";
-import SkeletonFormCard from './SkeletonFormCard';
+import SkeletonFormCard from "./SkeletonFormCard";
+import Swal from "sweetalert2";
 
 const dummyForms = [
   {
@@ -17,39 +16,39 @@ const dummyForms = [
     name: "Dummy Form 1",
     link_id: "tecnologica",
     description: "This is a dummy form for testing.",
-    model: 'XGBOST',
+    model: "XGBOST",
     logo: "https://via.placeholder.com/150",
     questions: [
       {
         id: "q1",
-        question: "What is your name?",   
-        options : ['Option 1', 'Option 2', 'Option 3'],
+        question: "What is your name?",
+        options: ["Option 1", "Option 2", "Option 3"],
       },
       {
         id: "q2",
-        question: "What is your name?",   
-        options : ['Option 1', 'Option 2', 'Option 3'],
+        question: "What is your name?",
+        options: ["Option 1", "Option 2", "Option 3"],
       },
-    ]
+    ],
   },
   {
     id: "dummy-2",
     name: "Dummy Form 2",
     description: "Another dummy form example.",
-    model: 'XGBOST',
+    model: "XGBOST",
     logo: "https://via.placeholder.com/150",
     questions: [
       {
         id: "q1",
-        question: "What is your name?",   
-        options : ['Option 1', 'Option 2', 'Option 3'],
+        question: "What is your name?",
+        options: ["Option 1", "Option 2", "Option 3"],
       },
       {
         id: "q2",
-        question: "What is your name?",   
-        options : ['Option 1', 'Option 2', 'Option 3'],
+        question: "What is your name?",
+        options: ["Option 1", "Option 2", "Option 3"],
       },
-    ]
+    ],
   },
 ];
 
@@ -91,6 +90,27 @@ const AdminForms = () => {
     setSelectedFormId(null);
   };
 
+  const handleDeleteEditor = async (id) => {
+    if (id) {
+      Swal.fire({
+        icon: "question",
+        text: "¿Esta Seguro ? Esta accion no se puede revertir.",
+      }).then(async (res) => {
+        if (res.isConfirmed) {
+          await deleteForm(id);
+          setForms((prev) => prev.filter((f) => f.id !== id)); // quita el formulario localmente
+          Swal.fire({
+            icon: "success",
+            text: "Eliminado",
+            timer: 1300,
+            showConfirmButton: false,
+          });
+          handleCloseEditor();
+        }
+      });
+    }
+  };
+
   const handleUpdateFormSuccess = () => {
     handleCloseEditor();
     loadForms(); // Reload forms after a successful update
@@ -115,16 +135,18 @@ const AdminForms = () => {
 
   if (error) {
     return (
-      <div className="container mx-auto mt-4 h-screen flex items-center justify-center text-red-500">
+      <div className="container mx-auto mt-2 h-screen flex items-center justify-center text-red-500">
         {error}
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto mt-4 h-screen overflow-y-scroll">
-      <div className="flex justify-between items-center mb-4 px-2">
-        <h1 className="text-2xl text-orange-500 font-bold">Gestion de formularios</h1>
+    <div className="container mx-auto mt-2 h-screen">
+      <div className="flex justify-between items-center  mb-4 px-2">
+        <h1 className="text-2xl text-orange-500 font-bold">
+          Gestion de formularios
+        </h1>
         <button
           className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           onClick={handleCreateForm}
@@ -139,11 +161,11 @@ const AdminForms = () => {
 
       {loading ? (
         <div className="px-2 grid grid-cols-1 items-center md:grid-cols-2 gap-2">
-          <SkeletonFormCard/>
-          <SkeletonFormCard/>
+          <SkeletonFormCard />
+          <SkeletonFormCard />
         </div>
       ) : (
-        <div className="px-2 grid grid-cols-1 items-center md:grid-cols-2 gap-2">
+        <div className="px-2 grid grid-cols-1 items-center overflow-x-hidden overflow-y-scroll md:grid-cols-2 gap-2 h-140 md:h-auto md:max-h-130">
           {forms.map((form) => (
             <FormCard key={form.id} form={form} onEdit={handleEditForm} />
           ))}
@@ -155,6 +177,7 @@ const AdminForms = () => {
           <FormEditor
             formId={selectedFormId}
             onClose={handleCloseEditor}
+            onDelete={handleDeleteEditor}
             onFormUpdated={handleUpdateFormSuccess} // Use the new success handler
           />
         </div>

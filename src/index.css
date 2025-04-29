@@ -32,6 +32,10 @@ body {
   overflow: hidden;
 }
 
+.h-dic{
+  height: calc(100dvh - 100px);
+}
+
 
 @keyframes fadeIn {
   from {

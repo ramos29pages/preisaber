@@ -15,12 +15,9 @@ import AddUserForm from "./components/AddUserForm";
 import Formularios from "./pages/Formularios";
 import ModelManager from "./components/ModelManager";
 import Resultados from "./pages/Resultados";
-
-
+import FormAssignmentComponent from "./pages/Asignaciones";
 
 function App() {
-
-
   const rolesForHome = ["administrador", "estudiante", "docente"];
   const rolesForRegister = ["administrador", "docente"];
   const rolesForAddRegister = ["administrador", "docente"];
@@ -28,8 +25,6 @@ function App() {
   // const rolesForUnauthorized = ["administrador", "estudiante", "docente"];
   // const rolesForLogin = ["administrador", "estudiante", "docente"];
   const rolesForFormularios = ["administrador", "docente", "estudiante"];
-
-
 
   return (
     <BrowserRouter>
@@ -43,7 +38,7 @@ function App() {
               element={
                 <ProtectedRoute requiredRole={rolesForHome}>
                   <LayoutDashboard>
-                  <Home />
+                    <Home />
                   </LayoutDashboard>
                 </ProtectedRoute>
               }
@@ -113,18 +108,17 @@ function App() {
               element={
                 <ProtectedRoute requiredRole={rolesForPreview}>
                   <LayoutDashboard>
-                    <Resultados/>
+                    <Resultados />
                   </LayoutDashboard>
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/asiganciones"
+              path="/asignaciones"
               element={
                 <ProtectedRoute requiredRole={rolesForPreview}>
                   <LayoutDashboard>
-                  <Resultados/>
-                    
+                    <FormAssignmentComponent />
                   </LayoutDashboard>
                 </ProtectedRoute>
               }
@@ -134,8 +128,7 @@ function App() {
               element={
                 <ProtectedRoute requiredRole={rolesForPreview}>
                   <LayoutDashboard>
-                  <Resultados/>
-                    
+                    <Resultados />
                   </LayoutDashboard>
                 </ProtectedRoute>
               }

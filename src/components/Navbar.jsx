@@ -6,8 +6,9 @@ import {
   faUsers, 
   faClipboardList, 
   faChartBar, 
-  faInfoCircle ,
-  faRobot
+  faRobot,
+  faSignsPost,
+  faSliders
 } from '@fortawesome/free-solid-svg-icons';
 
 const NavBar = () => {
@@ -60,18 +61,19 @@ const NavBar = () => {
     { 
       id: 'asignaciones', 
       label: 'Asignaciones', 
-      icon: faChartBar, 
+      icon: faSignsPost, 
       path: '/asignaciones',
       allowedRoles: rolesForResults // Only admin and teachers can see results
     },
     { 
       id: 'predisaber', 
       label: 'Predisaber', 
-      icon: faInfoCircle, 
+      icon: faSliders, 
       path: '/predisaber',
       allowedRoles: rolesForHome // Only admin and students can access predisaber
     }
   ];
+
 
   // Filter menu items based on user role
   const authorizedMenuItems = menuItems.filter(item => {

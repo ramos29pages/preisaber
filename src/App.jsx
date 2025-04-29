@@ -14,6 +14,7 @@ import Preview from "./pages/Preview";
 import AddUserForm from "./components/AddUserForm";
 import Formularios from "./pages/Formularios";
 import ModelManager from "./components/ModelManager";
+import Resultados from "./pages/Resultados";
 
 
 
@@ -48,7 +49,7 @@ function App() {
               }
             />
             <Route
-              path="/registros"
+              path="/usuarios"
               element={
                 <ProtectedRoute requiredRole={rolesForRegister}>
                   <LayoutDashboard>
@@ -103,6 +104,38 @@ function App() {
                 <ProtectedRoute requiredRole={rolesForPreview}>
                   <LayoutDashboard>
                     <Preview />
+                  </LayoutDashboard>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/resultados"
+              element={
+                <ProtectedRoute requiredRole={rolesForPreview}>
+                  <LayoutDashboard>
+                    <Resultados/>
+                  </LayoutDashboard>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/asiganciones"
+              element={
+                <ProtectedRoute requiredRole={rolesForPreview}>
+                  <LayoutDashboard>
+                  <Resultados/>
+                    
+                  </LayoutDashboard>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/predisaber"
+              element={
+                <ProtectedRoute requiredRole={rolesForPreview}>
+                  <LayoutDashboard>
+                  <Resultados/>
+                    
                   </LayoutDashboard>
                 </ProtectedRoute>
               }

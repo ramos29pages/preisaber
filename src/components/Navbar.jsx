@@ -30,10 +30,10 @@ const NavBar = () => {
       allowedRoles: rolesForHome // Everyone can access home
     },
     { 
-      id: 'registros', 
-      label: 'Registros', 
+      id: 'usuarios', 
+      label: 'Usuarios', 
       icon: faUsers, 
-      path: '/registros',
+      path: '/usuarios',
       allowedRoles: rolesForRegister // Only admin and teachers can access registros
     },
     { 
@@ -55,6 +55,13 @@ const NavBar = () => {
       label: 'Resultados', 
       icon: faChartBar, 
       path: '/resultados',
+      allowedRoles: rolesForResults // Only admin and teachers can see results
+    },
+    { 
+      id: 'asignaciones', 
+      label: 'Asignaciones', 
+      icon: faChartBar, 
+      path: '/asignaciones',
       allowedRoles: rolesForResults // Only admin and teachers can see results
     },
     { 

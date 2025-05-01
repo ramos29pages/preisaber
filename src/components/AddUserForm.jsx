@@ -6,7 +6,6 @@ import * as yup from "yup";
 import { useUsers } from "../context/UserContext";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowAltCircleLeft } from "@fortawesome/free-solid-svg-icons";
 

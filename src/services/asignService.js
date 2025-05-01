@@ -1,47 +1,102 @@
-import axios from 'axios';
+const API_BASE_URL = 'http://localhost:8000/asignaciones'; // Reemplaza con la URL de tu API
 
-const API_URL = 'http://localhost:8000/asignaciones';
-
-const api = axios.create({
-  baseURL: API_URL,
-  headers: { 'Content-Type': 'application/json' }
-});
-
-/**
- * crea todos los asigacniones desde la API.
- */
-export const crearAsiganacion = async (userId, formId) => {
-
-
-    let formData = new FormData();
-    formData.append("user_id", userId);
-    formData.append("form_id", formId);
-    formData.append("created_at", new Date());
-
-    console.log('ASIGANACION RECIBIDA=> :: ', formData);
-
-  try {
-    const response = await api.post("/", formData);
-    if (Array.isArray(response.data) && response.data.length > 0) {
-      return response.data;
-    } else {
-      return [{}];
-    }
-  } catch (error) {
-    console.error("Error al obtener usuarios:", error);
-  }
-};
-
-
-
-export const listarAsignaciones = async () => {
+const asignacionesService = {
+  crearAsignacion: async (asignacionData) => {
     try {
-      const response = await api.get("/");
-      console.log('ASIGNACIONES ==> ',response.data);
-      return response.data;
-  
+      const response = await fetch(API_BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(asignacionData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Error al crear la asignación');
+      }
+
+      return await response.json();
     } catch (error) {
-      console.error("Error fetching models:", error);
+      console.error('Error al crear la asignación:', error);
       throw error;
     }
-  };
+  },
+
+  obtenerAsignaciones: async (skip = 0, limit = 100) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}?skip=${skip}&limit=${limit}`);
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Error al obtener las asignaciones');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error al obtener las asignaciones:', error);
+      throw error;
+    }
+  },
+
+  obtenerAsignacionPorId: async (asignacionId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/${asignacionId}`);
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null; // La asignación no se encontró
+        }
+        const error = await response.json();
+        throw new Error(error.detail || 'Error al obtener la asignación');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error al obtener la asignación:', error);
+      throw error;
+    }
+  },
+
+  actualizarAsignacion: async (asignacionId, updateData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/${asignacionId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Error al actualizar la asignación');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error al actualizar la asignación:', error);
+      throw error;
+    }
+  },
+
+  eliminarAsignacion: async (asignacionId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/${asignacionId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Error al eliminar la asignación');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error al eliminar la asignación:', error);
+      throw error;
+    }
+  },
+};
+
+export default asignacionesService;

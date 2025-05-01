@@ -17,71 +17,71 @@ export default function FormAssignmentComponent() {
   const [loadingAssignments, setLoadingAssignments] = useState(true); // Nuevo estado para cargar asignaciones
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const usersData = await getUsers(); // Usa tu servicio real de usuarios
-        const formsData = await fetchForms(); // Usa tu servicio real de formularios
-        setUsers(usersData);
-        setForms(formsData);
-      } catch (error) {
-        console.error("Error fetching initial data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const fetchAssignments = async () => {
-      setLoadingAssignments(true);
-      try {
-        const assignmentsData = await asignacionesService.obtenerAsignaciones();
-        setAssignments(assignmentsData);
-      } catch (error) {
-        console.error("Error fetching assignments:", error);
-      } finally {
-        setLoadingAssignments(false);
-      }
-    };
-
     fetchData();
     fetchAssignments();
   }, []);
+
+  const fetchAssignments = async () => {
+    setLoadingAssignments(true);
+    try {
+      const assignmentsData = await asignacionesService.obtenerAsignaciones();
+      setAssignments(assignmentsData);
+    } catch (error) {
+      console.error("Error fetching assignments:", error);
+    } finally {
+      setLoadingAssignments(false);
+    }
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const usersData = await getUsers(); // Usa tu servicio real de usuarios
+      const formsData = await fetchForms(); // Usa tu servicio real de formularios
+      setUsers(usersData);
+      setForms(formsData);
+    } catch (error) {
+      console.error("Error fetching initial data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAssign = async (uId, fId) => {
     try {
       const newAssignment = {
         user_id: uId,
         form_id: fId,
-        asigned_by: localStorage.getItem('host_email'), // TODO: Obtener el usuario que asigna
+        asigned_by: localStorage.getItem("host_email"), // TODO: Obtener el usuario que asigna
         status: false, // Por defecto, la asignación no está completada
         created_at: new Date().toISOString(),
       };
       const assigned = await asignacionesService.crearAsignacion(newAssignment);
       setAssignments((prev) => [...prev, assigned]);
+      notify("Asignado!");
     } catch (error) {
       console.error("Error assigning form:", error);
-      notify(error?.message || 'Ups!', true);
+      toast.info(error?.message || "Ups!", true);
     }
   };
 
   const handleBulkAssign = (formId) => {
     filteredUsers.forEach((user) => handleAssign(user.id, formId));
-    notify('Asignado!');
-
   };
 
-  // const handleDelete = (asignId)=>{
-  //   try {
-  //     const deleted = asignacionesService.eliminarAsignacion(asignId);
-  //     if(deleted){
-  //       notify('Eliminado!');
-  //     }
-      
-  //   } catch (error) {
-  //     notify(error?.message || 'Error al eliminar.', true);
-  //   }
-
-  // }
+  const handleDelete = async (asignId) => {
+    try {
+      const deleted = await asignacionesService.eliminarAsignacion(asignId);
+      if (deleted) {
+        const assignmentsData = await asignacionesService.obtenerAsignaciones();
+        setAssignments(assignmentsData);
+        console.log(assignmentsData);
+        notify("Eliminado!");
+      }
+    } catch (error) {
+      notify(error?.message || "Error al eliminar.", true);
+    }
+  };
 
   // Filtrado de usuarios por semestre
   const filteredUsers = users.filter(
@@ -103,9 +103,9 @@ export default function FormAssignmentComponent() {
       <h2 className="text-2xl bg-gray-50 py-2 sticky top-0 font-bold mb-6 text-orange-500 text-center md:text-left">
         Asignación de Formularios
       </h2>
-      <ToastContainer/>
+      <ToastContainer />
 
-      {loading || loadingAssignments ? (
+      {loading ? (
         <div className="flex justify-center items-center h-48">
           <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
@@ -136,10 +136,12 @@ export default function FormAssignmentComponent() {
           </div>
 
           {/* Asignaciones realizadas */}
-          <AsignmentDesktopTable
+         <AsignmentDesktopTable
             assignments={assignments}
             users={users}
             forms={forms}
+            deleteAsign={handleDelete}
+            loadingAssignments={loadingAssignments}
           />
         </>
       )}

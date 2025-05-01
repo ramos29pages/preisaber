@@ -1,7 +1,7 @@
-// import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function AsignmentDesktopTable({ assignments, users, forms }) {
+export default function AsignmentDesktopTable({ assignments, users, forms, deleteAsign, loadingAssignments }) {
   return (
     <>
       <div className="mt-8 bg-white p-4 rounded-xl shadow-md border border-orange-200">
@@ -31,7 +31,7 @@ export default function AsignmentDesktopTable({ assignments, users, forms }) {
             No se han realizado asignaciones todavía
           </p>
         ) : (
-          <div className="max-h-64 overflow-y-auto">
+          <div className={`max-h-64 ${loadingAssignments ? 'opacity-0': 'opacity-100'} transition-opacity  overflow-y-auto`}>
             <table className="min-w-full divide-y divide-orange-200">
               <thead className="bg-orange-50">
                 <tr>
@@ -70,11 +70,11 @@ export default function AsignmentDesktopTable({ assignments, users, forms }) {
                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
                         {a.created_at}
                       </td>
-                      {/* <td  className="px-3 py-2 whitespace-nowrap text-sm text-rose-500">
-                        <button onClick={deleteAsign(a.id)}>
+                      <td  className="px-3 py-2 whitespace-nowrap text-sm text-rose-500">
+                        <button onClick={ ()=> deleteAsign(a.id)}>
                           <FontAwesomeIcon icon={faTrash}/>
                         </button>
-                      </td> */}
+                      </td>
                     </tr>
                   );
                 })}

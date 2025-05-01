@@ -6,7 +6,10 @@ import FilterSelector from "../components/Asignments/FilterSelector";
 import AsignmentFormList from "../components/Asignments/AsignmentFormList";
 import AsignmentUserList from "../components/Asignments/AsignmentUserList";
 import AsignmentDesktopTable from "../components/Asignments/AsignmentDesktopTable";
+import AsignmentMobileTable from "../components/Asignments/AsigmentMobileTable";
 import { ToastContainer, toast } from "react-toastify";
+import { useMediaQuery } from "react-responsive";
+
 
 export default function FormAssignmentComponent() {
   const [users, setUsers] = useState([]);
@@ -15,6 +18,10 @@ export default function FormAssignmentComponent() {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingAssignments, setLoadingAssignments] = useState(true); // Nuevo estado para cargar asignaciones
+
+
+  const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
+  const isMobile = useMediaQuery({ maxWidth: 1023 });
 
   useEffect(() => {
     fetchData();
@@ -136,13 +143,22 @@ export default function FormAssignmentComponent() {
           </div>
 
           {/* Asignaciones realizadas */}
+          {isDesktopOrLaptop &&
          <AsignmentDesktopTable
             assignments={assignments}
             users={users}
             forms={forms}
             deleteAsign={handleDelete}
             loadingAssignments={loadingAssignments}
-          />
+          />}
+          {isMobile &&
+         <AsignmentMobileTable
+            assignments={assignments}
+            users={users}
+            forms={forms}
+            deleteAsign={handleDelete}
+            loadingAssignments={loadingAssignments}
+          />}
         </>
       )}
     </div>

@@ -28,7 +28,7 @@ const Preview = () => {
         text: "Faltan columnas obligatorias en el CSV.",
         icon: "error",
         confirmButtonText: "Volver a registros"
-      }).then(() => navigate("/registros"));                              // redirección imperativa :contentReference[oaicite:9]{index=9}
+      }).then(() => navigate("/usuarios"));                              // redirección imperativa :contentReference[oaicite:9]{index=9}
       return;
     }
 
@@ -62,7 +62,7 @@ const Preview = () => {
           timer: 1500,
           showConfirmButton: false
         });
-        navigate("/registros");                                          // redirige cuando no hay datos :contentReference[oaicite:12]{index=12}
+        navigate("/usuarios");                                          // redirige cuando no hay datos :contentReference[oaicite:12]{index=12}
         return;
       }
 

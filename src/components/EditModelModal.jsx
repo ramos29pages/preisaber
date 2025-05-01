@@ -11,6 +11,7 @@ import {
   faFileLines,
   faCodeBranch,
   faChartLine,
+  faRotateRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { updateModel } from "../services/modelService";
@@ -30,6 +31,7 @@ export default function EditModelModal({ isOpen, onClose, model, onUpdated }) {
   });
   const [fileName, setFileName] = useState("");
   const [variableInput, setVariableInput] = useState("");
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const fileRef = useRef();
   const contentRef = useRef();
@@ -105,11 +107,15 @@ export default function EditModelModal({ isOpen, onClose, model, onUpdated }) {
     if (form.archivo) data.append("archivo", form.archivo);
 
     try {
+      setLoading(true);
       const updated = await updateModel(model.id, data);
-
+      setLoading(false);
+      
       if (updated) {
         Swal.fire({
           title: 'Correcto',
+          icon: 'success',
+          showConfirmButton: false,
           timer: 1300
         });
         onClose();
@@ -121,6 +127,12 @@ export default function EditModelModal({ isOpen, onClose, model, onUpdated }) {
       }
     } catch (e) {
       console.log(e);
+      Swal.fire({
+        title: e.message || e,
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1300
+      });
       toast.error(`Error al actualizar: ${e.message || e}`);
     }
   };
@@ -299,9 +311,12 @@ export default function EditModelModal({ isOpen, onClose, model, onUpdated }) {
           </button>
           <button
             onClick={handleSubmit}
-            className="bg-orange-500 hover:bg-orange-700 transition-colors text-white px-4 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+            disabled={loading}
+            className={` hover:bg-orange-700 transition-colors text-white px-4 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 ${loading ? 'bg-gray-500' : 'bg-orange-500'}` }
           >
-            <FontAwesomeIcon icon={faCheck} className="mr-2" /> Guardar
+            {!loading && < FontAwesomeIcon icon={faCheck} className="mr-2" /> }
+            {loading && < FontAwesomeIcon icon={faRotateRight} className="mr-2 animate-spin" /> }
+            {loading ? 'Actualizando...': 'Guardar'}
           </button>
         </div>
       </div>

@@ -152,6 +152,12 @@ export default function AddModel({ setShowModal, models, setModels }) {
       }
     } catch (error) {
       console.error("Error al crear el modelo:", error);
+      Swal.fire({  
+        text: error.response?.data?.detail || error.message || 'Hubo un error al ejecutar la operacion.',
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 1300
+      });
       const errorMessage = error.response?.data?.detail || error.message || "Error desconocido al crear el modelo";
       toast.error('Error: ' + errorMessage);
     } finally {

@@ -16,7 +16,7 @@ const Layout = ({ children }) => {
         <div className={`bg-white p-4 ${menuAbierto ? 'block' : 'hidden'} md:block`}>
           <NavBar userRole={user.role}/>
         </div>
-        <main className="flex-1 p-4">
+        <main className="flex-1 p-2 h-screen">
           {children}
         </main>
       </div>

@@ -76,7 +76,7 @@ export default function TablePreview({ data }) {
       for (let row of plain) {
         await createUser(transformUser(row));
       }
-      navigate("/registros");
+      navigate("/usuarios");
     } catch (error) {
       setSaveError(`Error al guardar: ${error.message}`);
     } finally {
@@ -84,7 +84,7 @@ export default function TablePreview({ data }) {
     }
   };
 
-  const cancelOperation = () => navigate("/registros");
+  const cancelOperation = () => navigate("/usuarios");
 
   return (
     <div className="max-w-screen flex flex-col h-[calc(100vh-100px)] p-4 bg-slate-50">

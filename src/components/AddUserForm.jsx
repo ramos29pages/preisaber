@@ -7,6 +7,8 @@ import { useUsers } from "../context/UserContext";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowAltCircleLeft } from "@fortawesome/free-solid-svg-icons";
 
 const schema = yup
   .object({
@@ -60,134 +62,149 @@ export default function AddUserForm() {
       }).then((res) => {
         if (res.dismiss) {
           reset();
-          navigate("/registros");
+          navigate("/usuarios");
         }
       });
     } catch (error) {
-      console.error("Error al crear usuario:", error);
-      toast.error('Error al crear el usuario.')
+      Swal.fire({
+        title: error?.response.data.detail,
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      console.error("Error al crear usuario:", error?.response);
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="max-w-lg mx-auto bg-white p-6 rounded-2xl shadow-lg space-y-4"
-    >
-      <h2 className="text-2xl font-bold text-orange-600 text-center">
-        Añadir Usuario
-      </h2>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Nombre
-        </label>
-        <input
-          {...register("name")}
-          className={`mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition
-            ${errors.name ? "border-red-500" : "border-gray-300"}`}
-          placeholder="Ej. Juan Pérez"
-        />
-        {errors.name && (
-          <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
-        )}
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Email</label>
-        <input
-          {...register("email")}
-          className={`mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition
-            ${errors.email ? "border-red-500" : "border-gray-300"}`}
-          placeholder="ejemplo@mail.com"
-        />
-        {errors.email && (
-          <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
-        )}
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Rol</label>
-          <input
-            {...register("role")}
-            className={`mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none text-slate-400 focus:ring-orange-400 transition
-              ${errors.role ? "border-red-500" : "border-gray-300"}`}
-            placeholder="Ej. estudiante"
-            readOnly={true}
-            value={"Estudiante"}
-            S
-          />
-          {errors.role && (
-            <p className="text-red-500 text-xs mt-1">{errors.role.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Semestre
-          </label>
-          <input
-            type="number"
-            {...register("semester")}
-            className={`mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition
-              ${errors.semester ? "border-red-500" : "border-gray-300"}`}
-            placeholder="Ej. 5"
-          />
-          {errors.semester && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.semester.message}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Identificación
-          </label>
-          <input
-            {...register("identificacion")}
-            className={`mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition
-              ${errors.identificacion ? "border-red-500" : "border-gray-300"}`}
-            placeholder="Ej. 12345678"
-          />
-          {errors.identificacion && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.identificacion.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Tipo de Prueba
-          </label>
-          <select
-            {...register("tipo_prueba")}
-            className={`mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition
-              ${errors.tipo_prueba ? "border-red-500" : "border-gray-300"}`}
-          >
-            <option value="">Seleccione...</option>
-            <option value="tecnologica">Tecnológica</option>
-            <option value="profesional">Profesional</option>
-          </select>
-          {errors.tipo_prueba && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.tipo_prueba.message}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full py-2 bg-orange-500 text-white font-semibold rounded-xl shadow hover:bg-orange-600 transition-colors disabled:opacity-50"
-      >
-        {isSubmitting ? "Guardando…" : "Agregar Usuario"}
+    <div className="flex flex-col items-center w-full h-150">
+      <button onClick={()=>{navigate('/usuarios')}} className="m-4 text-cente flex items-center gap-1 justify-start w-full cursor-pointer hover:underline">
+        <FontAwesomeIcon className="text-orange-500" icon={faArrowAltCircleLeft}/>
+        <span className="text-orange-500 font-bold"> Regresar</span>
       </button>
-    </form>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="max-w-lg mx-auto bg-white p-6 rounded-2xl shadow-lg space-y-4"
+      >
+        <h2 className="text-2xl font-bold text-orange-600 text-center">
+          Añadir Usuario
+        </h2>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Nombre
+          </label>
+          <input
+            {...register("name")}
+            className={`mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition
+            ${errors.name ? "border-red-500" : "border-gray-300"}`}
+            placeholder="Ej. Juan Pérez"
+          />
+          {errors.name && (
+            <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
+          <input
+            {...register("email")}
+            className={`mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition
+            ${errors.email ? "border-red-500" : "border-gray-300"}`}
+            placeholder="ejemplo@mail.com"
+          />
+          {errors.email && (
+            <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Rol
+            </label>
+            <input
+              {...register("role")}
+              className={`mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none text-slate-400 focus:ring-orange-400 transition
+              ${errors.role ? "border-red-500" : "border-gray-300"}`}
+              placeholder="Ej. estudiante"
+              readOnly={true}
+              value={"Estudiante"}
+              S
+            />
+            {errors.role && (
+              <p className="text-red-500 text-xs mt-1">{errors.role.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Semestre
+            </label>
+            <input
+              type="number"
+              {...register("semester")}
+              className={`mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition
+              ${errors.semester ? "border-red-500" : "border-gray-300"}`}
+              placeholder="Ej. 5"
+            />
+            {errors.semester && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.semester.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Identificación
+            </label>
+            <input
+              {...register("identificacion")}
+              className={`mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition
+              ${errors.identificacion ? "border-red-500" : "border-gray-300"}`}
+              placeholder="Ej. 12345678"
+            />
+            {errors.identificacion && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.identificacion.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Tipo de Prueba
+            </label>
+            <select
+              {...register("tipo_prueba")}
+              className={`mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition
+              ${errors.tipo_prueba ? "border-red-500" : "border-gray-300"}`}
+            >
+              <option value="">Seleccione...</option>
+              <option value="tecnologica">Tecnológica</option>
+              <option value="profesional">Profesional</option>
+            </select>
+            {errors.tipo_prueba && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.tipo_prueba.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full py-2 bg-orange-500 text-white font-semibold rounded-xl shadow hover:bg-orange-600 transition-colors disabled:opacity-50"
+        >
+          {isSubmitting ? "Guardando…" : "Agregar Usuario"}
+        </button>
+      </form>
+    </div>
   );
 }

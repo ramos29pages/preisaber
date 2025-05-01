@@ -33,7 +33,7 @@ const Header = ({ onMenuClick }) => {
   };
 
   return (
-    <header className="flex items-center mt-0 justify-between w-full py-4 px-2 md:px-4 bg-black shadow-md z-1 relative">
+    <header className="flex items-center animate__animated animate__fadeInDown mt-0 justify-between w-full py-4 px-2 md:px-4 bg-white shadow-md z-1 relative">
       <div className="flex items-center">
         <button
           className="p-2 mr-2 text-gray-500 focus:outline-none md:hidden"

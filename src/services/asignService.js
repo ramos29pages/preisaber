@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8000/asignaciones'; // Reemplaza con la URL de tu API
+const API_BASE_URL = 'https://predisaber-backend.onrender.com/asignaciones'; // Reemplaza con la URL de tu API
 
 const asignacionesService = {
   crearAsignacion: async (asignacionData) => {

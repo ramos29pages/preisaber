@@ -18,13 +18,12 @@ const Home = () => {
   } else if (user.role === 'administrador') {
     return (
       <>
-      <h1 className='text-orange-500 text-2xl font-semibold mb-8' >Bienvenido 
+      {/* <h1 className='text-orange-500 text-2xl font-semibold mb-8' >Bienvenido 
         <span className='text-orange-500 text-2xl font-bold ml-1'>
         {user.given_name}
         </span> 
-      </h1>
-      <div className="flex flex-col items-center h-screen overflow-scroll">
-      <Metrics />
+      </h1> */}
+      <div className="w-full items-center h-dic md:h-150 scroll-hidden overflow-y-scroll">
       <Metrics />
       </div>
       </>
@@ -43,3 +42,6 @@ const Home = () => {
 };
 
 export default Home;
+
+
+

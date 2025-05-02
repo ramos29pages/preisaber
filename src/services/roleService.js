@@ -6,7 +6,7 @@ import axios from 'axios';
  * Evita repetir la URL en cada llamada. :contentReference[oaicite:4]{index=4}
  */
 const api = axios.create({
-  baseURL: '/http://localhost:8000/roles',           // Ajusta según tu ruta real
+  baseURL: '/https://predisaber-backend.onrender.com/roles',           // Ajusta según tu ruta real
   headers: { 'Content-Type': 'application/json' }
 });
 

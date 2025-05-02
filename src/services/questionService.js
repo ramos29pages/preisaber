@@ -1,6 +1,6 @@
 // src/services/questionService.js
 import axios from "axios";
-const API_BASE = "http://localhost:8000";  // ajusta tu URL
+const API_BASE = "https://predisaber-backend.onrender.com";  // ajusta tu URL
 
 
 const dummyQuestions = [

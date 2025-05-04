@@ -130,7 +130,8 @@ const Login = () => {
             
             {/* Footer text */}
             <p className="text-gray-500 text-xs mt-8 text-center">
-              Predisaber Sistema desarrollado para UNINUÑEZ
+              {/* Predisaber Sistema desarrollado para UNINUÑEZ */}
+              By Ramos
             </p>
           </div>
         </div>

@@ -58,6 +58,28 @@ const asignacionesService = {
     }
   },
 
+  obtenerAsignacionPorUserid: async (userId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/userid/${userId}`);
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null; // La asignación no se encontró
+        }
+        const error = await response.json();
+        throw new Error(error.detail || 'Error al obtener la asignación');
+      }
+
+      let data = await response.json();
+      console.log('from service:: ', data)
+
+      return data;
+    } catch (error) {
+      console.error('Error al obtener la asignación:', error);
+      throw error;
+    }
+  },
+
   actualizarAsignacion: async (asignacionId, updateData) => {
     try {
       const response = await fetch(`${API_BASE_URL}/${asignacionId}`, {

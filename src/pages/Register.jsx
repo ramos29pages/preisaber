@@ -137,6 +137,7 @@ const Register = () => {
           {filteredUsers.length > 0 ? (
             filteredUsers.map((user) => (
               <RegisterCard
+              key={user.id}
                 onUserDeleted={handlerDeleteUser}
                 onUserUpdated={handlerUpdateUser}
                 user={user}

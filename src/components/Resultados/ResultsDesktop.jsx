@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import ResultsDetailModal from "./ResultsDetailModal";
 
-export default function ResultsDesktop({ resultados, selectedResult, setSelectedResult }) {
+export default function ResultsDesktop({ resultados, loading, selectedResult, setSelectedResult }) {
   // Estado para filtros
   const [filters, setFilters] = useState({ userId: "", formId: "", assignedBy: "", prediction: "" });
 
@@ -16,9 +16,9 @@ export default function ResultsDesktop({ resultados, selectedResult, setSelected
   // Aplicar filtros
   const filteredResults = resultados.filter((r) => {
     return (
-      r.user_id.toLowerCase().includes(filters.userId.toLowerCase()) &&
-      r.form_id.toLowerCase().includes(filters.formId.toLowerCase()) &&
-      r.asigned_by.toLowerCase().includes(filters.assignedBy.toLowerCase()) &&
+      r.user_id.toLowerCase().includes(filters.userId.toLowerCase()) ||
+      r.form_id.toLowerCase().includes(filters.formId.toLowerCase()) ||
+      r.asigned_by.toLowerCase().includes(filters.assignedBy.toLowerCase()) ||
       (filters.prediction === "" || r.prediction.toString() === filters.prediction)
     );
   });
@@ -29,7 +29,7 @@ export default function ResultsDesktop({ resultados, selectedResult, setSelected
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Listado de Resultados</h1>
 
       {/* Filtros */}
-      <div className="mb-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+      { loading && <div className="mb-4 grid grid-cols-1 md:grid-cols-4 gap-4">
         <input
           type="text"
           name="userId"
@@ -65,7 +65,11 @@ export default function ResultsDesktop({ resultados, selectedResult, setSelected
           <option value="0.5">0.5</option>
           <option value="1.0">1.0</option>
         </select>
-      </div>
+      </div>}
+
+      {
+        !loading && <h1>Cargando...</h1>
+      }
 
       {/* Contenedor con scroll solo para el cuerpo de la tabla */}
       <div

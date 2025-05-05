@@ -9,7 +9,7 @@ import AsignmentDesktopTable from "../components/Asignments/AsignmentDesktopTabl
 import AsignmentMobileTable from "../components/Asignments/AsigmentMobileTable";
 import { ToastContainer, toast } from "react-toastify";
 import { useMediaQuery } from "react-responsive";
-
+import Hamster from "./../components/Hamster";
 
 export default function FormAssignmentComponent() {
   const [users, setUsers] = useState([]);
@@ -18,7 +18,6 @@ export default function FormAssignmentComponent() {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingAssignments, setLoadingAssignments] = useState(true); // Nuevo estado para cargar asignaciones
-
 
   const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 1023 });
@@ -113,8 +112,11 @@ export default function FormAssignmentComponent() {
       <ToastContainer />
 
       {loading ? (
+        // <div className="flex justify-center items-center h-48">
+        //   <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+        // </div>
         <div className="flex justify-center items-center h-48">
-          <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+          <Hamster />
         </div>
       ) : (
         <>
@@ -143,22 +145,24 @@ export default function FormAssignmentComponent() {
           </div>
 
           {/* Asignaciones realizadas */}
-          {isDesktopOrLaptop &&
-         <AsignmentDesktopTable
-            assignments={assignments}
-            users={users}
-            forms={forms}
-            deleteAsign={handleDelete}
-            loadingAssignments={loadingAssignments}
-          />}
-          {isMobile &&
-         <AsignmentMobileTable
-            assignments={assignments}
-            users={users}
-            forms={forms}
-            deleteAsign={handleDelete}
-            loadingAssignments={loadingAssignments}
-          />}
+          {isDesktopOrLaptop && (
+            <AsignmentDesktopTable
+              assignments={assignments}
+              users={users}
+              forms={forms}
+              deleteAsign={handleDelete}
+              loadingAssignments={loadingAssignments}
+            />
+          )}
+          {isMobile && (
+            <AsignmentMobileTable
+              assignments={assignments}
+              users={users}
+              forms={forms}
+              deleteAsign={handleDelete}
+              loadingAssignments={loadingAssignments}
+            />
+          )}
         </>
       )}
     </div>

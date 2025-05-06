@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { faDatabase, faEye } from '@fortawesome/free-solid-svg-icons';
 
 
 export default function ResultsMobile({resultados, selectedResult, setSelectedResult}) {
@@ -42,7 +42,14 @@ export default function ResultsMobile({resultados, selectedResult, setSelectedRe
           </div>
         ))}
       </div>
-
+      {resultados.length === 0 && (
+              <tr>
+                <td colSpan={6} className="py-4 text-gray-400">
+                  <FontAwesomeIcon className='mr-2' icon={faDatabase}/>
+                  No hay conexion con la base de datos.
+                </td>
+              </tr>
+            )}
       {selectedResult && (
         <DetailModal result={selectedResult} onClose={() => setSelectedResult(null)} />
       )}
@@ -84,6 +91,7 @@ function DetailModal({ result, onClose }) {
                   <p className="text-gray-700 text-sm">{resp.response}</p>
                 </div>
               ))}
+              
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/resultados",
+  baseURL: "https://predisaber-backend.onrender.com/resultados",
   headers: { "Content-Type": "application/json" },
 });
 

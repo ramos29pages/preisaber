@@ -95,11 +95,11 @@ const AddForm = ({ onClose, onFormCreated }) => {
   };
 
   return (
-    <div className="fixed animate__animated animate__fadeIn animate__fast inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-60">
+    <div className="fixed animate__animated animate__fadeIn animate__fast inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-200">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden">
         {/* Header */}
         <div className="px-6 py-4 bg-orange-500 text-white flex justify-between items-center">
-          <h2 className="text-xl font-bold">Crear Formulario</h2>
+          <h2 className="text-xl font-bold">Creando Formulario</h2>
           <button onClick={onClose} className="text-white text-2xl leading-none">&times;</button>
         </div>
         {/* Body con scroll */}

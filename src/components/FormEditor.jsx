@@ -122,7 +122,7 @@ const FormEditor = ({ formId, onClose, onDelete, onFormUpdated }) => {
   if (error.load) return <div className="text-red-500 p-6">{error.load}</div>;
 
   return (
-    <div className="bg-white animate__animated animate__fadeIn animate__fast p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+    <div className="bg-white animate__animated animate__fadeIn animate__fast p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto z-90">
       <h2 className="text-2xl font-bold mb-4 text-orange-600">Editar Formulario</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Nombre, descripción, logo */}

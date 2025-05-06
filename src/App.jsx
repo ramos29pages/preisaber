@@ -16,6 +16,7 @@ import Formularios from "./pages/Formularios";
 import ModelManager from "./components/ModelManager";
 import Resultados from "./pages/Resultados";
 import FormAssignmentComponent from "./pages/Asignaciones";
+import Configuration from "./pages/Configuration";
 
 function App() {
   const rolesForHome = ["administrador", "estudiante", "docente"];
@@ -128,7 +129,7 @@ function App() {
               element={
                 <ProtectedRoute requiredRole={rolesForPreview}>
                   <LayoutDashboard>
-                    <Resultados />
+                    <Configuration/>
                   </LayoutDashboard>
                 </ProtectedRoute>
               }

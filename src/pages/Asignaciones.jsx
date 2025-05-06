@@ -30,8 +30,20 @@ export default function FormAssignmentComponent() {
   const fetchAssignments = async () => {
     setLoadingAssignments(true);
     try {
-      const assignmentsData = await asignacionesService.obtenerAsignaciones();
-      setAssignments(assignmentsData);
+      let assignmentsData = await asignacionesService.obtenerAsignaciones();
+      const hostEmail = localStorage.getItem('host_email')
+      const userRol = localStorage.getItem('userRole')
+      console.log('EMAIL FOR ASIGNMENTS::=> ',hostEmail)
+      console.log('ROLE FOR ASIGNMENTS::=> ',userRol)
+      console.log('ASIGNMENTS::=> ', assignmentsData)
+
+      if(userRol === 'administrador'){
+        setAssignments(assignmentsData);
+        
+      } else if(userRol === 'docente'){
+        setAssignments(assignmentsData.filter( a=> a.asigned_by == hostEmail));
+      }
+      
     } catch (error) {
       console.error("Error fetching assignments:", error);
     } finally {

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../context/AuthContext";
+import { ADMINISTRADORES } from "../constants/configuration";
 
 const Login = () => {
   const { login } = useAuth();
-  const administradores = ["danielramos9991@gmail.com"];
+  const administradores = ADMINISTRADORES;
   const [isLoading, setIsLoading] = useState(false);
 
   function capitalizarPrimeraLetra(str) {
@@ -37,13 +38,12 @@ const Login = () => {
       const estudianteRegex =
         /^[a-z]+[0-9]+@(curnvirtual\.edu\.co|uninunez\.edu\.co)$/i;
 
-      if (docenteRegex.test(email)) {
+      if (administradores.includes(email)) {
         role = "docente";
       } else if (estudianteRegex.test(email)) {
         role = "estudiante";
-      } else if (administradores.includes(email)) {
-        // si el email NO esta en la curn pero esta dentro de la lista de administradores asignar el rol de administrador tambien
-        role = "administrador";
+      } else if (docenteRegex.test(email)) {
+        role = "docente";
       }
 
       const userData = {

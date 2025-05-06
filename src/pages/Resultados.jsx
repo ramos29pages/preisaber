@@ -63,21 +63,30 @@ import { getAllResultados } from "../services/resultsService";
 // ];
 
 export default function Resultados() {
-
   const [resultados, setResultados] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(()=>{
-    getAllResults()
-  },[])
+  useEffect(() => {
+    getAllResults();
+  }, []);
 
   const getAllResults = async () => {
     setLoading(true);
     const res = await getAllResultados();
-    setResultados(res);
-    return res;
+    const hostEmail = localStorage.getItem("host_email");
+    const userRol = localStorage.getItem("userRole");
+    console.log("EMAIL FOR ASIGNMENTS::=> ", hostEmail);
+    console.log("ROLE FOR ASIGNMENTS::=> ", userRol);
+    console.log("RESULTADOS::=> ", res);
 
-  }
+    if (userRol === "administrador") {
+      setResultados(res);
+      setLoading(false);
+    } else if (userRol === "docente") {
+      setResultados(res.filter((a) => a.asigned_by == hostEmail));
+      setLoading(false)
+    }
+  };
 
   const [selectedResult, setSelectedResult] = useState(null);
   const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
@@ -85,9 +94,21 @@ export default function Resultados() {
 
   return (
     <>
-    { isDesktopOrLaptop &&  <ResultsDesktop loading={loading} resultados={resultados} selectedResult={selectedResult} setSelectedResult={setSelectedResult}/>}
-    {isMobile && <ResultsMobile resultados={resultados} selectedResult={selectedResult} setSelectedResult={setSelectedResult}/>}
+      {isDesktopOrLaptop && (
+        <ResultsDesktop
+          loading={loading}
+          resultados={resultados}
+          selectedResult={selectedResult}
+          setSelectedResult={setSelectedResult}
+        />
+      )}
+      {isMobile && (
+        <ResultsMobile
+          resultados={resultados}
+          selectedResult={selectedResult}
+          setSelectedResult={setSelectedResult}
+        />
+      )}
     </>
-    
   );
 }

@@ -82,7 +82,7 @@ const NavBar = () => {
   });
 
   return (
-    <nav className="flex flex-col w-full bg-white">
+    <nav className="flex flex-col w-full bg-white z-5">
       {authorizedMenuItems.map((item) => {
         const isActive = currentPath === item.path;
         

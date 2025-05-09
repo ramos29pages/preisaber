@@ -24,6 +24,7 @@ export default function StudentsForms() {
   const [error, setError] = useState(null);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const host_email = localStorage.getItem("host_email");
 
   // Capitaliza la primera letra de un string
   const capitalizeFirstLetter = (input) => {
@@ -60,7 +61,8 @@ export default function StudentsForms() {
           );
 
           if (!isMounted) return;
-          setAssignments(assignmentsWithDetails);
+          
+          setAssignments(assignmentsWithDetails.filter(a => a.user.email === host_email));
         } catch (err) {
           console.error("Error al obtener las asignaciones:", err);
           if (isMounted) {
@@ -224,7 +226,7 @@ export default function StudentsForms() {
                 </span>
               </h1>
               <p className="text-sm sm:text-base text-orange-100 animate__animated animate__fadeInUp animate__delay-1s">
-                Bienvenido al sistema de formularios más ágil del mercado 🚀
+                ¡Desbloquea tu futuro! Bienvenido a Predisaber 🚀
                 <span className="block mt-1">
                   Hoy es un gran día para avanzar!
                 </span>
@@ -255,7 +257,7 @@ export default function StudentsForms() {
               </span>
               Tienes{" "}
               <span className="font-bold text-yellow-200">
-                {assignments.length} formularios pendientes
+                {assignments.filter(a => a.status).length} formularios pendientes
               </span>{" "}
               por completar hoy
             </p>
@@ -263,10 +265,10 @@ export default function StudentsForms() {
 
           <div className="mt-6 flex flex-wrap gap-3">
             <span className="px-4 py-2 bg-white/10 rounded-full text-white text-sm font-medium animate__animated animate__fadeInRight animate__delay-3s">
-              📝 {assignments.length} pendientes
+              📝 {assignments.length} Totales
             </span>
             <span className="px-4 py-2 bg-white/10 rounded-full text-white text-sm font-medium animate__animated animate__fadeInRight animate__delay-4s">
-              ⏰ Antes de las 23:59
+              ⏰ Sin Limite
             </span>
             <span className="px-4 py-2 bg-white/10 rounded-full text-white text-sm font-medium animate__animated animate__fadeInRight animate__delay-5s">
               🎯 ¡Completa todos!
@@ -285,7 +287,7 @@ export default function StudentsForms() {
       </div>
       <div className="md:hidden">
         <StudentFormCardsMobile
-          assignments={assignments}
+          assignments={assignments.filter(a=> a.user.email === host_email)}
           onCompleteForm={handleCompleteForm}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}

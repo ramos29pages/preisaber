@@ -59,7 +59,7 @@ const Login = () => {
       setTimeout(() => {
         login(userData); // Llama a la función de login del contexto
         setIsLoading(false);
-      }, 800);
+      }, 100);
     }
   };
 

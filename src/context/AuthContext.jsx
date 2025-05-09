@@ -1,6 +1,6 @@
 // src/AuthContext.jsx
-import React, { createContext, useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { createContext, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -10,24 +10,28 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     // Guarda la información del usuario, por ejemplo, en localStorage si lo deseas.
-    localStorage.setItem('userRole', userData.role);
-    localStorage.setItem('host_email', userData.email);
+    localStorage.setItem("userRole", userData.role);
+    localStorage.setItem("host_email", userData.email);
     localStorage.setItem("auth_user", JSON.stringify(userData));
     setUser(userData);
 
-    navigate('/dashboard'); // Redirige al usuario a la página de inicio después de iniciar sesión
+    if (userData.role === "administrador" || userData.role === "docente") {
+      navigate("/dashboard"); // Redirige al usuario a la página de usuarios después de iniciar sesión
+    } else if (userData.role === "estudiante") {
+      navigate("/formularios"); // Redirige al usuario a la página de inicio después de iniciar sesión
+    }
   };
 
   const logout = () => {
     setUser(null);
-    navigate('/');
+    navigate("/");
   };
 
   const value = {
     user: user,
     login,
     logout,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -19,7 +19,7 @@ import FormAssignmentComponent from "./pages/Asignaciones";
 import Configuration from "./pages/Configuration";
 
 function App() {
-  const rolesForHome = ["administrador", "estudiante", "docente"];
+  const rolesForHome = ["administrador", "docente"];
   const rolesForRegister = ["administrador", "docente"];
   const rolesForAddRegister = ["administrador", "docente"];
   const rolesForPreview = ["administrador", "docente"];

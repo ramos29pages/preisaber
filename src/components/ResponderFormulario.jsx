@@ -18,7 +18,6 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
   const [submitting, setSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-
   const total = questions.length;
   const progress = total > 0 ? (current / total) * 100 : 0;
 
@@ -52,7 +51,6 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
       setCompleted(true);
     }, 1500);
   };
-
   if (userLoading) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">

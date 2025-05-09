@@ -16,7 +16,7 @@ const NavBar = () => {
   const currentPath = location.pathname;
 
   
-  const rolesForHome = ["administrador", "estudiante", "docente"];
+  // const rolesForHome = ["administrador", "estudiante", "docente"];
   const rolesForRegister = ["administrador", "docente"];
   const rolesForResults = ["administrador", "docente"];
   const rolesForFormularios = ["administrador", "docente", "estudiante"];
@@ -28,7 +28,7 @@ const NavBar = () => {
       label: 'Inicio', 
       icon: faHome, 
       path: '/dashboard',
-      allowedRoles: rolesForHome // Everyone can access home
+      allowedRoles: rolesForRegister // Everyone can access home
     },
     { 
       id: 'usuarios', 
@@ -70,7 +70,7 @@ const NavBar = () => {
       label: 'Predisaber', 
       icon: faSliders, 
       path: '/predisaber',
-      allowedRoles: rolesForHome // Only admin and students can access predisaber
+      allowedRoles: rolesForRegister // Only admin and students can access predisaber
     }
   ];
 

@@ -39,7 +39,7 @@ const Login = () => {
         /^[a-z]+[0-9]+@(curnvirtual\.edu\.co|uninunez\.edu\.co)$/i;
 
       if (administradores.includes(email)) {
-        role = "docente";
+        role = "administrador";
       } else if (estudianteRegex.test(email)) {
         role = "estudiante";
       } else if (docenteRegex.test(email)) {

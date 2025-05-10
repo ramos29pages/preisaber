@@ -15,7 +15,11 @@ const Header = ({ onMenuClick }) => {
   // Array de notificaciones de ejemplo
   const notifications = [
     { id: 1, message: "Nueva tarea asignada", time: "Hace 5 minutos" },
-    { id: 2, message: "Jairo Acosta te ha asignado un formulario.", time: "Hace 1 hora" },
+    {
+      id: 2,
+      message: "Jairo Acosta te ha asignado un formulario.",
+      time: "Hace 1 hora",
+    },
     {
       id: 3,
       message: "Actualización del sistema completada",
@@ -23,6 +27,23 @@ const Header = ({ onMenuClick }) => {
     },
     { id: 4, message: "Jairo acosta te asigno el rol Admin", time: "Ayer" },
   ];
+
+  function abreviarNombre(nombreCompleto) {
+    const nombres = nombreCompleto.split(" ");
+    if (nombres.length >= 2) {
+      const primerNombre = nombres[0];
+      const primerApellido = nombres[nombres.length - 1];
+      return `${primerNombre.charAt(0).toUpperCase()}${primerNombre
+        .slice(1)
+        .toLowerCase()} ${primerApellido.charAt(0).toUpperCase()}.`;
+    } else if (nombres.length === 1) {
+      return `${nombres[0].charAt(0).toUpperCase()}${nombres[0]
+        .slice(1)
+        .toLowerCase()}`;
+    } else {
+      return ""; // Devuelve una cadena vacía si no hay nombres
+    }
+  }
 
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
@@ -32,38 +53,45 @@ const Header = ({ onMenuClick }) => {
     setShowUserModal(!showUserModal);
   };
 
+  const userRol =
+    localStorage.getItem("userRole") === "administrador" || "docente";
+
   return (
     <header className="flex items-center animate__animated animate__fadeInDown mt-0 justify-between w-full py-4 px-2 md:px-4 bg-white shadow-md z-1 relative">
       <div className="flex items-center">
-        <button
-          className="p-2 mr-2 text-gray-500 focus:outline-none md:hidden"
-          onClick={onMenuClick}
-          aria-label="Mostrar menú"
-        >
-          <FontAwesomeIcon
-            icon={faBars}
-            className="w-5 h-5 text-gray-500 fill-current"
-          />
-        </button>
+        {!userRol && (
+          <button
+            className="p-2 mr-2 text-gray-500 focus:outline-none md:hidden"
+            onClick={onMenuClick}
+            aria-label="Mostrar menú"
+          >
+            <FontAwesomeIcon
+              icon={faBars}
+              className="w-5 h-5 text-gray-500 fill-current"
+            />
+          </button>
+        )}
         <img
           src="https://www.uninunez.edu.co/images/logotxttealw.svg"
           alt="INUÑEZ Logo"
-          className="h-8 md:h-12" 
+          className="h-8 md:h-12"
         />
       </div>
 
       <div className="flex items-center">
         <div className="flex items-center mr-2">
-          <button
-            className="text-gray-400 text-xl focus:outline-none relative cursor-pointer"
-            onClick={toggleNotifications}
-            aria-label="Mostrar notificaciones"
-          >
-            <FontAwesomeIcon icon={faBell} />
-            <span className="absolute top-1 md:top-1 right-0 inline-flex items-center justify-center px-1 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-rose-500 rounded-full">
-              {/* {notifications.length} */}
-            </span>
-          </button>
+          {!userRol && (
+            <button
+              className="text-gray-400 text-xl focus:outline-none relative cursor-pointer"
+              onClick={toggleNotifications}
+              aria-label="Mostrar notificaciones"
+            >
+              <FontAwesomeIcon icon={faBell} />
+              <span className="absolute top-1 md:top-1 right-0 inline-flex items-center justify-center px-1 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-rose-500 rounded-full">
+                {/* {notifications.length} */}
+              </span>
+            </button>
+          )}
 
           {/* Dropdown de notificaciones */}
           {showNotifications && (
@@ -103,7 +131,7 @@ const Header = ({ onMenuClick }) => {
           </div> */}
           <div className=" px-2">
             <div className="text-xs md:text-sm font-semibold text-gray-900">
-              {user?.given_name || "No name available"}
+              {abreviarNombre(user?.username) || "No name available"}
             </div>
             <div className="text-xs text-orange-500">
               {user?.role === "administrador"
@@ -117,7 +145,10 @@ const Header = ({ onMenuClick }) => {
           <div className="w-10 h-10 overflow-hidden bg-gray-100 rounded-full ring-4 ring-gray-300">
             <img
               className="object-cover w-full h-full"
-              src={user?.picture || 'https://st4.depositphotos.com/14903220/24649/v/450/depositphotos_246499746-stock-illustration-abstract-sign-avatar-men-icon.jpg'}
+              src={
+                user?.picture ||
+                "https://st4.depositphotos.com/14903220/24649/v/450/depositphotos_246499746-stock-illustration-abstract-sign-avatar-men-icon.jpg"
+              }
               alt="User avatar"
             />
 

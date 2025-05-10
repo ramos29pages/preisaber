@@ -216,7 +216,7 @@ export default function StudentsForms() {
         <div className="bg-gradient-to-r from-orange-400 to-amber-600 rounded-3xl p-8 shadow-lg transform transition-all hover:scale-[1.03] hover:shadow-xl">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div className="space-y-4">
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-white flex items-center gap-4">
+              <h1 className="text-2xl md:text-4xl font-extrabold text-white flex items-center gap-4">
                 <span className="animate__animated animate__bounceIn animate__faster">
                   🌞
                 </span>
@@ -225,8 +225,8 @@ export default function StudentsForms() {
                   🔥
                 </span>
               </h1>
-              <p className="text-sm sm:text-base text-orange-100 animate__animated animate__fadeInUp animate__delay-1s">
-                ¡Desbloquea tu futuro! Bienvenido a Predisaber 🚀
+              <p className="text-sm sm:text-base text-center md:text-start text-orange-100 animate__animated animate__fadeInUp animate__delay-1s">
+                ¡Desbloquea tu futuro! <br className="md:hidden"/> Bienvenido a Predisaber 🚀
                 <span className="block mt-1">
                   Hoy es un gran día para avanzar!
                 </span>
@@ -235,7 +235,7 @@ export default function StudentsForms() {
 
             <div className="flex-shrink-0 bg-white/15 backdrop-blur-sm rounded-2xl p-5 border border-orange-300/30">
               <div className="flex items-center gap-3 text-white">
-                <span className="text-3xl animate__animated animate__swing animate__delay-2s">
+                <span className="text-sm md:text-3xl animate__animated animate__swing animate__delay-2s">
                   📅
                 </span>
                 <span className="font-medium">
@@ -251,19 +251,19 @@ export default function StudentsForms() {
           </div>
 
           <div className="mt-6 p-5 bg-white/10 rounded-2xl border border-orange-300/20 animate__animated animate__fadeInUp animate__delay-2s">
-            <p className="text-white text-sm sm:text-base flex items-center gap-3">
-              <span className="text-xl animate__animated animate__wobble animate__infinite animate__slower">
+            <p className="text-white text-sm sm:text-base text-center md:text-start items-center gap-3">
+              <span className="text-sm md:text-xl animate__animated animate__wobble animate__infinite animate__slower">
                 📌
               </span>
-              Tienes{" "}
+              {" "}Tienes{" "}
               <span className="font-bold text-yellow-200">
-                {assignments.filter(a => a.status).length} formularios pendientes
+                {assignments.filter(a => a.status).length} {assignments.filter(a => a.status).length > 1 ? "formularios pendientes" : "formulario pendiente"}{""}
               </span>{" "}
-              por completar hoy
+              por completar
             </p>
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-6 flex justify-center md:justify-items-end flex-wrap gap-3">
             <span className="px-4 py-2 bg-white/10 rounded-full text-white text-sm font-medium animate__animated animate__fadeInRight animate__delay-3s">
               📝 {assignments.length} Totales
             </span>

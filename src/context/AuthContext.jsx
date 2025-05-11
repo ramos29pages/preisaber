@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("userRole", userData.role);
     localStorage.setItem("host_email", userData.email);
     localStorage.setItem("auth_user", JSON.stringify(userData));
+    console.log('FOTO',userData.picture)
     setUser(userData);
 
     if (userData.role === "administrador" || userData.role === "docente") {

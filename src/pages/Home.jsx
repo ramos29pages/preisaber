@@ -1,47 +1,78 @@
 // src/pages/Home.jsx
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Metrics from '../components/Metrics';
 
 const Home = () => {
   const { isAuthenticated, user } = useAuth();
+  const [chartData, setChartData] = useState(null);
 
+  // Función para transformar la respuesta de la API
+  function mapPredictionsToChartData(items) {
+    const counts = items.reduce(
+      (acc, { prediction }) => {
+        if (prediction === 0) acc.below += 1;
+        else acc.above += 1;
+        return acc;
+      },
+      { below: 0, above: 0 }
+    );
+
+    return [
+      { name: "Por debajo de la media", value: counts.below },
+      { name: "Por encima de la media", value: counts.above },
+    ];
+  }
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    // Reemplaza '/api/endpoint' con tu ruta real
+    fetch('https://predisaber-backend.onrender.com/resultados')
+      .then(res => {
+        if (!res.ok) throw new Error('Error al obtener datos');
+        console.log('RESULTADOS PRA CHART', res);
+        return res.json();
+      })
+      .then((data) => {
+        const transformed = mapPredictionsToChartData(data);
+        setChartData(transformed);
+      })
+      .catch(err => {
+        console.error(err);
+        // Aquí podrías mostrar una notificación de error al usuario
+      });
+  }, [isAuthenticated]);
+
+  // Si no está autenticado, redirige al login
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
-  if ( user.role === 'docente') {
+  // Estado de carga
+  if (chartData === null) {
     return (
-      <h1>Bienvenido {user.given_name}</h1>
-    );
-  } else if (user.role === 'administrador') {
-    return (
-      <>
-      {/* <h1 className='text-orange-500 text-2xl font-semibold mb-8' >Bienvenido 
-        <span className='text-orange-500 text-2xl font-bold ml-1'>
-        {user.given_name}
-        </span> 
-      </h1> */}
-      <div className="w-full items-center h-dic md:h-150 scroll-hidden overflow-y-scroll">
-      <Metrics />
+      <div className="flex justify-center items-center h-full">
+        <p>Cargando datos...</p>
       </div>
-      </>
-    );
-  }
-  else if (user.role === 'estudiante') {
-    return (
-        <h1>Hola estudiante</h1>
-    );
-  } else {
-    return (
-        <h1>Hola invitado</h1>
     );
   }
 
+  // Render según rol
+  if (user.role === 'docente' || user.role === 'administrador') {
+    return (
+      <div className="w-full h-full overflow-y-auto p-4">
+        <Metrics studentData={chartData} />
+      </div>
+    );
+  }
+
+  if (user.role === 'estudiante') {
+    return <h1>Hola estudiante</h1>;
+  }
+
+  return <h1>Hola invitado</h1>;
 };
 
 export default Home;
-
-
-

@@ -59,7 +59,7 @@ const Header = ({ onMenuClick }) => {
       <div className="flex items-center">
         {userRol && (
           <button
-            className="p-2 mr-2 text-gray-500 block focus:outline-none"
+            className="p-2 mr-2 text-gray-500 block focus:outline-none md:hidden"
             onClick={onMenuClick}
             aria-label="Mostrar menú"
           >

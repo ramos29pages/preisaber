@@ -15,10 +15,8 @@ import {
 } from "recharts";
 
 export default function StudentStatsVisualization({ studentData }) {
-  // If no data is provided, use demo data
   const [activeIndex, setActiveIndex] = useState(0);
   
-  // Default demo data if none provided
   const defaultData = [
     { name: "Por debajo de 0.5", value: 24 },
     { name: "Por encima de 0.5", value: 32 }
@@ -26,16 +24,16 @@ export default function StudentStatsVisualization({ studentData }) {
   
   const data = studentData || defaultData;
   
-  // Colors for both charts
-  const COLORS = ["#d97706", "#9ca3af"];
+  // Paleta de colores mejorada
+  const COLORS = ["#ea580c", "#fdba74", "#9ca3af"];
+  const GRADIENT_COLORS = ["#f97316", "#fb923c"];
   const RADIAN = Math.PI / 180;
   
-  // Handler for pie chart active segment
   const onPieEnter = (_, index) => {
     setActiveIndex(index);
   };
   
-  // Custom label for pie chart segments
+  // Etiquetas personalizadas con animación
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -48,14 +46,14 @@ export default function StudentStatsVisualization({ studentData }) {
         fill="white" 
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
-        className="text-xs font-medium"
+        className="text-xs font-semibold transition-all duration-300 transform hover:scale-110"
       >
         {`${(percent * 100).toFixed(0)}%`}
       </text>
     );
   };
   
-  // Active shape for pie chart hover effect
+  // Diseño mejorado para el hover en el pie chart
   const renderActiveShape = (props) => {
     const { 
       cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle,
@@ -89,12 +87,14 @@ export default function StudentStatsVisualization({ studentData }) {
           startAngle={startAngle}
           endAngle={endAngle}
           innerRadius={outerRadius + 6}
-          outerRadius={outerRadius + 10}
+          outerRadius={outerRadius + 12}
           fill={fill}
         />
-        <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-        <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333" className="text-xs">{`${payload.name}`}</text>
+        <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" strokeWidth={2} />
+        <circle cx={ex} cy={ey} r={3} fill={fill} stroke="none" />
+        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333" className="text-xs font-medium">
+          {`${payload.name}`}
+        </text>
         <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#666" className="text-xs">
           {`${value} estudiantes (${(percent * 100).toFixed(0)}%)`}
         </text>
@@ -102,29 +102,32 @@ export default function StudentStatsVisualization({ studentData }) {
     );
   };
 
-  // Format for tooltip
+  // Tooltip mejorado con transición
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-3 border border-gray-200 shadow-md rounded">
-          <p className="font-medium text-gray-900">{`${label}`}</p>
-          <p className="text-orange-600">{`${payload[0].value} estudiantes`}</p>
+        <div className="bg-white p-4 border border-gray-200 shadow-lg rounded-xl transition-all duration-300 transform scale-100 hover:scale-105">
+          <p className="font-bold text-gray-900 mb-1">{`${label}`}</p>
+          <div className="flex items-center">
+            <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: payload[0].color }}></span>
+            <p className="text-orange-600 font-medium">{`${payload[0].value} estudiantes`}</p>
+          </div>
         </div>
       );
     }
     return null;
   };
 
-  // Calculate total for summary
   const total = data.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="bg-white rounded-xl shadow-xs border border-gray-200 overflow-hidden">
-      <div className="p-4 bg-gradient-to-r from-orange-100 to-orange-50 border-b border-gray-200">
-        <h2 className="font-semibold text-gray-800 text-lg flex items-center">
+    <div className="bg-gray-50 rounded-xl h-dic overflow-y-auto scroll-hidden border border-gray-200 transition-all duration-300">
+      {/* Header con gradiente mejorado */}
+      <div className="p-5 bg-gradient-to-r from-orange-500 to-orange-600 border-b border-orange-300">
+        <h2 className="font-bold text-white text-xl flex items-center">
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
-            className="h-5 w-5 mr-2 text-orange-500" 
+            className="h-6 w-6 mr-3 text-white" 
             fill="none" 
             viewBox="0 0 24 24" 
             stroke="currentColor"
@@ -140,55 +143,95 @@ export default function StudentStatsVisualization({ studentData }) {
         </h2>
       </div>
 
-      <div className="p-4">
+      <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Summary Cards */}
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 flex flex-col">
-            <h3 className="text-sm font-medium text-gray-500 mb-3">Resumen</h3>
-            <div className="grid grid-cols-3 gap-3 mb-2">
-              <div className="bg-white p-3 rounded shadow-sm border border-gray-100">
-                <div className="text-xs text-gray-500">Total</div>
-                <div className="text-xl font-bold text-gray-800">{total}</div>
+          {/* Tarjetas de resumen mejoradas */}
+          <div className="bg-gradient-to-b rounded-xl p-5 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+            <h3 className="text-sm font-bold text-gray-600 mb-4 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              Resumen General
+            </h3>
+            <div className="grid grid-cols-3 gap-3 mb-4">
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
+                <div className="text-xs text-gray-500 mb-1">Total</div>
+                <div className="text-2xl text-center font-extrabold text-gray-800">{total}</div>
               </div>
-              <div className="bg-white p-3 rounded shadow-sm border border-gray-100">
-                <div className="text-xs text-gray-500">&lt; 0.5</div>
-                <div className="text-xl font-bold text-orange-500">{data[0].value}</div>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
+                <div className="text-xs text-gray-500 mb-1">Sobre la media</div>
+                <div className="text-2xl text-center font-extrabold text-orange-600">{data[0].value}</div>
               </div>
-              <div className="bg-white p-3 rounded shadow-sm border border-gray-100">
-                <div className="text-xs text-gray-500">&gt; 0.5</div>
-                <div className="text-xl font-bold text-gray-500">{data[1].value}</div>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
+                <div className="text-xs text-gray-500 mb-1">Debajo de la media</div>
+                <div className="text-2xl text-center font-extrabold text-gray-600">{data[1].value}</div>
               </div>
             </div>
-            <div className="text-sm text-gray-600 mt-auto">
+            <div className="text-sm text-gray-600 mt-auto flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+              </svg>
               El {((data[0].value / total) * 100).toFixed(1)}% de los estudiantes está por debajo del umbral de 0.5
             </div>
           </div>
 
-          {/* Bar Chart */}
-          <div className="h-64 bg-white rounded-lg p-4 border border-gray-200">
-            <h3 className="text-sm font-medium text-gray-500 mb-2">Gráfico de Barras</h3>
+          {/* Gráfico de Barras Mejorado */}
+          <div className="h-72 bg-white rounded-xl p-4 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+            <h3 className="text-sm font-bold text-gray-600 mb-3 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              Gráfico de Barras
+            </h3>
             <ResponsiveContainer width="100%" height="85%">
               <BarChart
                 data={data}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
-                <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                <YAxis />
+                <XAxis 
+                  dataKey="name" 
+                  tick={{ fontSize: 12, fill: '#6b7280' }}
+                  interval={0}
+                  angle={0}
+                  textAnchor="middle"
+                />
+                <YAxis tick={{ fontSize: 12, fill: '#6b7280' }} />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="value" name="Estudiantes">
+                <Bar 
+                  dataKey="value" 
+                  name="Estudiantes"
+                  radius={[4, 4, 0, 0]}
+                >
                   {data.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={`url(#gradient-${index})`} 
+                      className="transition-all duration-300 hover:opacity-80"
+                    />
                   ))}
                 </Bar>
+                <defs>
+                  {data.map((_, index) => (
+                    <linearGradient key={`gradient-${index}`} id={`gradient-${index}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={GRADIENT_COLORS[index % GRADIENT_COLORS.length]} stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor={COLORS[index % COLORS.length]} stopOpacity={0.9}/>
+                    </linearGradient>
+                  ))}
+                </defs>
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Pie Chart - Full Width */}
-        <div className="mt-6 h-72 bg-white rounded-lg p-4 border border-gray-200">
-          <h3 className="text-sm font-medium text-gray-500 mb-2">Distribución de Estudiantes</h3>
+        {/* Gráfico de Pastel - Ancho Completo */}
+        <div className="mt-6 h-80 bg-white rounded-xl p-5 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+          <h3 className="text-sm font-bold text-gray-600 mb-3 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Distribución de Estudiantes
+          </h3>
           <ResponsiveContainer width="100%" height="90%">
             <PieChart>
               <Pie
@@ -213,8 +256,12 @@ export default function StudentStatsVisualization({ studentData }) {
                 layout="horizontal" 
                 verticalAlign="bottom" 
                 align="center"
-                formatter={(value) => (
-                  <span className="text-sm text-gray-700">{value}</span>
+                wrapperStyle={{ paddingBottom: 10 }}
+                formatter={(value, entry) => (
+                  <span className="text-sm text-gray-700 font-medium flex items-center">
+                    <span className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: entry.color }}></span>
+                    {value}
+                  </span>
                 )}
               />
             </PieChart>

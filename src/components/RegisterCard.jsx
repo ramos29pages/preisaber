@@ -67,14 +67,27 @@ export default function RegisterCard({ user, onUserDeleted, onUserUpdated }) {
         </div>
         <div>
           <p className="font-semibold text-orange-500">{user.name}</p>
-          <p className="text-xs text-slate-500 truncate w-50 font-semibold">
+          <p className="text-xs text-slate-500 w-25 truncate md:w-50 font-semibold">
             {user.email}
           </p>
-          <p className="text-xs text-slate-500 truncate w-26 font-semibold">
+          <p className="text-xs text-slate-500 truncate w-26 md:w-50 font-semibold">
             Semestre {user.semester}
           </p>
 
-          {hasAssignments ? (
+          {hasAssignments && (
+            forms.map(form => (
+              <div
+                key={form.id || form.form_id}
+                className="flex items-center gap-1 w-30 md:w-50 font-semibold text-xs text-orange-500 bg-orange-50 p-1 px-2 rounded-md m-1"
+              >
+                <FontAwesomeIcon icon={faPaperclip} size="s" />
+                <p className="truncate">{form.name || "Nombre no disponible"}</p>
+              </div>
+            ))
+          )}
+
+
+          {/* {hasAssignments ? (
             forms.map(form => (
               <p
                 key={form.id || form.form_id}
@@ -89,7 +102,8 @@ export default function RegisterCard({ user, onUserDeleted, onUserUpdated }) {
               <FontAwesomeIcon icon={faPaperclip} size="s" />
               Sin pruebas asignadas
             </p>
-          )}
+          )} */}
+
         </div>
       </div>
 
@@ -99,7 +113,7 @@ export default function RegisterCard({ user, onUserDeleted, onUserUpdated }) {
           className="mx-1 text-slate-300 hover:text-slate-500 p-2 rounded-full transition-colors"
           onClick={() => handleDelete(user.id)}
         >
-          <FontAwesomeIcon icon={faTrash} size="xl" />
+          <FontAwesomeIcon icon={faTrash} className="md:text-xl" />
         </button>
         <ToastContainer />
         <button
@@ -107,7 +121,7 @@ export default function RegisterCard({ user, onUserDeleted, onUserUpdated }) {
           className="mx-1 text-orange-500 p-2 rounded-full transition-colors"
           onClick={() => setIsEditDialogOpen(true)}
         >
-          <FontAwesomeIcon icon={faEdit} size="xl" />
+          <FontAwesomeIcon icon={faEdit} className="md:text-xl" />
         </button>
         {isEditDialogOpen && (
           <EditUserModal

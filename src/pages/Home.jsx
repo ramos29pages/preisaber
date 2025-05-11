@@ -62,7 +62,7 @@ const Home = () => {
   // Render según rol
   if (user.role === 'docente' || user.role === 'administrador') {
     return (
-      <div className="w-full h-full overflow-y-auto p-4">
+      <div className="w-full h-full overflow-y-auto">
         <Metrics studentData={chartData} />
       </div>
     );

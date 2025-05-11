@@ -139,7 +139,7 @@ const FormEditor = ({ formId, onClose, onDelete, onFormUpdated }) => {
 
   return (
     <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-500 animate-fadeIn">
-      <div className="bg-rose-500 animate__animated animate__fadeIn animate__fast p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+      <div className="bg-white animate__animated animate__fadeIn animate__fast p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4 text-orange-600">
           Editar Formulario
         </h2>

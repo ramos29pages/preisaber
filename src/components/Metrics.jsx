@@ -106,7 +106,7 @@ export default function StudentStatsVisualization({ studentData }) {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-4 border border-gray-200 shadow-lg rounded-xl transition-all duration-300 transform scale-100 hover:scale-105">
+        <div className="bg-white p-2 border border-gray-200 shadow-lg rounded-xl transition-all duration-300 transform scale-100 hover:scale-105">
           <p className="font-bold text-gray-900 mb-1">{`${label}`}</p>
           <div className="flex items-center">
             <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: payload[0].color }}></span>
@@ -124,7 +124,7 @@ export default function StudentStatsVisualization({ studentData }) {
     <div className="bg-gray-50 rounded-xl h-dic overflow-y-auto scroll-hidden border border-gray-200 transition-all duration-300">
       {/* Header con gradiente mejorado */}
       <div className="p-5 bg-gradient-to-r from-orange-500 to-orange-600 border-b border-orange-300">
-        <h2 className="font-bold text-white text-xl flex items-center">
+        <h2 className="font-bold text-white md:text-xl flex items-center">
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
             className="h-6 w-6 mr-3 text-white" 
@@ -139,35 +139,35 @@ export default function StudentStatsVisualization({ studentData }) {
               d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" 
             />
           </svg>
-          Estadísticas de Rendimiento Estudiantil
+          Estadísticas de Rendimiento
         </h2>
       </div>
 
-      <div className="p-6">
+      <div className="p-2">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Tarjetas de resumen mejoradas */}
-          <div className="bg-gradient-to-b rounded-xl p-5 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+          <div className="bg-gradient-to-b rounded-xl p-5 border-none duration-300">
             <h3 className="text-sm font-bold text-gray-600 mb-4 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
               Resumen General
             </h3>
-            <div className="grid grid-cols-3 gap-3 mb-4">
-              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
+            <div className="grid md:grid-cols-3 gap-3 mb-4">
+              <div className="bg-white p-2 md:p-4 rounded-lg shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
                 <div className="text-xs text-gray-500 text-center mb-1">Total</div>
                 <div className="text-2xl text-center font-extrabold text-gray-800">{total}</div>
               </div>
-              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
+              <div className="bg-white p-2 md:p-4 rounded-lg shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
                 <div className="text-xs text-gray-500 text-center mb-1">Debajo de la media</div>
                 <div className="text-2xl text-center font-extrabold text-orange-600">{data[0].value}</div>
               </div>
-              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
+              <div className="bg-white p-2 md:p-4 rounded-lg shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
                 <div className="text-xs text-gray-500 text-center mb-1">Sobre la media</div>
                 <div className="text-2xl text-center font-extrabold text-gray-600">{data[1].value}</div>
               </div>
             </div>
-            <div className="text-sm text-gray-600 mt-auto flex items-center">
+            <div className="text-sm text-gray-600 mt-auto flex text-center items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
               </svg>
@@ -176,7 +176,7 @@ export default function StudentStatsVisualization({ studentData }) {
           </div>
 
           {/* Gráfico de Barras Mejorado */}
-          <div className="h-72 bg-white rounded-xl p-4 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+          <div className="h-72 p-2 bg-white rounded-xl border border-gray-100 hover:shadow-lg transition-shadow duration-300">
             <h3 className="text-sm font-bold text-gray-600 mb-3 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -191,12 +191,13 @@ export default function StudentStatsVisualization({ studentData }) {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
                 <XAxis 
                   dataKey="name" 
-                  tick={{ fontSize: 12, fill: '#6b7280' }}
+                  tick={{ fontSize: 15, fill: '#6b7280' }}
                   interval={0}
                   angle={0}
                   textAnchor="middle"
+                  tickFormatter={v => v.includes("Por debajo de la media") ? "1" : "0"}
                 />
-                <YAxis tick={{ fontSize: 12, fill: '#6b7280' }} />
+                <YAxis tick={{ fontSize: 12, fill: '#6b7280'}} />
                 <Tooltip content={<CustomTooltip />} />
                 <Bar 
                   dataKey="value" 

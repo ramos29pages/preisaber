@@ -49,7 +49,7 @@ const StatCard = ({ icon, title, value }) => (
 
 export default function Configuration() {
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
+    <div className="h-dic flex flex-col overflow-hidden">
       {/* Barra superior con nombre del sistema */}
       <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -61,7 +61,7 @@ export default function Configuration() {
               <span className="font-semibold text-gray-800">Predisaber</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500">Versión 2.1.0</span>
+              <span className="text-xs text-gray-500 hidden md:block">Versión 2.1.0</span>
               <div className="h-4 w-px bg-gray-200 mx-2"></div>
               <span className="text-xs text-gray-500">Panel de Configuración</span>
             </div>
@@ -74,7 +74,7 @@ export default function Configuration() {
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
           {/* Encabezado de página */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Configuración del Sistema</h1>
+            <h1 className="md:text-3xl text-xl font-bold text-gray-900">Configuración del Sistema</h1>
             <p className="mt-2 text-sm text-gray-600">
               Gestione los parámetros y ajustes de la plataforma Predisaber
             </p>
@@ -144,7 +144,7 @@ export default function Configuration() {
                       </div>
                       <h3 className="font-medium text-blue-800">Estado del Sistema</h3>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-xs md:text-sm text-center text-gray-600">
                       El sistema está funcionando correctamente. Todos los servicios están activos y respondiendo con normalidad.
                     </p>
                   </div>
@@ -154,14 +154,11 @@ export default function Configuration() {
           </div>
 
           {/* Componentes adicionales en un diseño de pestañas visualmente */}
-          <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden mb-8">
+          <div className="bg-white hidden md:block rounded-xl shadow-md border border-gray-200 overflow-hidden mb-8">
             <div className="border-b border-gray-200">
               <div className="flex">
                 <div className="px-6 py-3 font-medium text-sm text-gray-800 border-b-2 border-orange-500">
                   Variables del Sistema
-                </div>
-                <div className="px-6 py-3 font-medium text-sm text-gray-500">
-                  Configuración Avanzada
                 </div>
               </div>
             </div>
@@ -181,7 +178,7 @@ export default function Configuration() {
                   <FontAwesomeIcon className="text-orange-600" icon={faInfoCircle} />
                 </div>
               </div>
-              <p className="text-sm text-gray-700 leading-relaxed">
+              <p className="text-xs text-gray-700 leading-relaxed">
                 Predisaber es una aplicación diseñada para optar por el título
                 de Ingeniería de Sistemas en la Corporación Universitaria Rafael
                 Nuñez. Permite registrar usuarios, formularios y modelos de

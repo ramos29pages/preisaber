@@ -142,19 +142,19 @@ const AdminForms = () => {
   }
 
   return (
-    <div className="container animate__animated animate__fadeIn animate__fast mx-auto mt-2 h-screen">
+    <div className="container animate__animated animate__fadeIn animate__fast mx-auto mt-2 h-dic py-4 flex flex-col">
       <div className="flex justify-between items-center  mb-4 px-2">
-        <h1 className="text-2xl text-orange-500 font-bold">
+        <h1 className="md:text-2xl text-md text-orange-500 font-bold">
           Gestion de formularios
         </h1>
         <button
-          className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-gradient-to-r from-orange-500 to-red-500 hover:bg-orange-700 text-white py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline"
           onClick={handleCreateForm}
         >
-          Crear Formulario
+        + Crear
         </button>
       </div>
-      <p className="mb-8 px-2 text-slate-500">
+      <p className="mb-8 text-sm md_text-md px-2 text-slate-500">
         Hola {user.given_name}, aquí puedes gestionar y crear nuevos
         formularios.
       </p>
@@ -165,7 +165,7 @@ const AdminForms = () => {
           <SkeletonFormCard />
         </div>
       ) : (
-        <div className="px-2 grid grid-cols-1 items-center overflow-x-hidden overflow-y-scroll md:grid-cols-2 gap-2 h-140 md:h-auto md:max-h-130">
+        <div className="px-2 grid grid-cols-1 items-center overflow-x-hidden overflow-y-scroll md:grid-cols-2 gap-2 md:h-auto h-screen md:max-h-130">
           {forms.map((form) => (
             <FormCard key={form.id} form={form} onEdit={handleEditForm} />
           ))}
@@ -173,7 +173,7 @@ const AdminForms = () => {
       )}
 
       {selectedFormId && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black/50 bg-opacity-50 flex justify-center items-center z-90">
+        <div className="absolute top-0 left-0 w-full h-full bg-black/50 bg-opacity-50 flex justify-center items-center z-200">
           <FormEditor
             formId={selectedFormId}
             onClose={handleCloseEditor}
@@ -184,7 +184,7 @@ const AdminForms = () => {
       )}
 
       {isCreatingForm && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black/70 flex justify-center items-center z-70">
+        <div className="absolute top-0 left-0 w-full h-full bg-black/70 flex justify-center items-center z-200">
           {/* <FormCreator onClose={handleCloseCreator} onFormCreated={handleCreateFormSuccess} */}
           <AddForm
             onClose={handleCloseCreator}

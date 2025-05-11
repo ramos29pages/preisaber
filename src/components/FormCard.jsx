@@ -22,7 +22,7 @@ const FormCard = ({ form, onEdit }) => {
         <div className="grid md:grid-cols-2 items-center justify-evenly">
           {form.logo && (
             <img
-              className="h-18 md:h-18 min-h-12 mx-auto"
+              className="h-10 md:h-18 min-h-12 mx-auto"
               src={form.logo}
               alt={form.name}
               onError={(e) => {
@@ -31,12 +31,12 @@ const FormCard = ({ form, onEdit }) => {
               }}
             />
           )}
-          <div className="text-sm md:text-md text-slate-500 text-center">
-            <h2 className="text-orange-500 text-xl truncate font-semibold">
+          <div className="text-xs md:text-sm md:text-md text-slate-500 text-center">
+            <h2 className="text-orange-500 md:text-xl text-sm truncate font-semibold">
               {form.name}
             </h2>
             {form.description && (
-              <p className="text-gray-500 text-center">{form.description}</p>
+              <p className="text-gray-500 text-xs md:text-md text-center">{form.description}</p>
             )}
             {form.questions !== undefined && (
               <p className="text-slate-900 font-bold text-md md:text-xl">

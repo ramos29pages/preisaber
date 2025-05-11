@@ -72,8 +72,8 @@ const Register = () => {
   };
 
   return (
-    <div className="h-dic scroll-hidden bg-slate-50">
-      <div className="max-w-4xl mx-auto p-4">
+    <div className="py-4 scroll-hidden h-screen">
+      <div className="max-w-4xl mx-auto">
         {/* Barra de búsqueda y botón agregar */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center border border-gray-300 rounded-md px-4 py-2 bg-white flex-1 mr-4">
@@ -113,7 +113,7 @@ const Register = () => {
         {/* Lista de usuarios con scroll */}
         <div
           className="bg-white shadow rounded-md divide-y divide-gray-200 overflow-y-auto"
-          style={{ height: "calc(100dvh - 60px - 120px)" }}
+          style={{ height: "calc(100dvh - 240px)" }} // Ajusta la altura máxima
         >
           {_showAddButtons && (
             <AddRegisterModal setShowAddButtons={setShowAddButtons} />

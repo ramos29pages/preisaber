@@ -89,17 +89,17 @@ export default function ModelManager() {
   };
 
   return (
-    <div className="p-1 md:p-6 bg-gray-50 h-dic">
+    <div className="p-1 md:p-6 bg-gray-50 h-dic overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-orange-500">
+          <h2 className="md:text-2xl text-md font-bold text-orange-500">
             Modelos de Predicción
           </h2>
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2.5 rounded-xl shadow hover:from-orange-600 hover:to-red-600 transition"
+            className="flex items-center bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2.5 text-xs rounded-xl md:text-2xl shadow hover:from-orange-600 hover:to-red-600 transition"
           >
-            <FontAwesomeIcon icon={faPlus} className="mr-2" /> Nuevo Modelo
+            <FontAwesomeIcon icon={faPlus} className="mr-2 md:text-xl" /> Nuevo
           </button>
         </div>
 

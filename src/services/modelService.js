@@ -3,16 +3,16 @@ import axios from "axios";
 
 // Creamos una instancia con baseURL apuntando a nuestro backend :contentReference[oaicite:0]{index=0}turn2search3
 const API = axios.create({
-  // baseURL: "https://predisaber-backend.onrender.com/modelos"
-  baseURL: "http://127.0.0.1:8000"
+  baseURL: "https://predisaber-backend.onrender.com/modelos"
+  // baseURL: "http://127.0.0.1:8000"
 });
 
 
 // src/services/modelService.js
 
 // API base URL - adjust this to match your backend
-// const API_URL = 'https://predisaber-backend.onrender.com'; // or your actual API URL
-const API_URL = 'http://127.0.0.1:8000'; // or your actual API URL
+const API_URL = 'https://predisaber-backend.onrender.com'; // or your actual API URL
+// const API_URL = 'http://127.0.0.1:8000'; // or your actual API URL
 
 export const listModels = async () => {
   try {

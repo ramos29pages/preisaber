@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useUsers } from "../context/UserContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
+import { transformarRespuestas, createPayload } from './../services/answerService';
+import {
   faSpinner, 
   faCheck, 
   faArrowRight, 
@@ -44,6 +45,10 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
   };
 
   const confirmSubmit = () => {
+
+    console.log("Confirming submission...");
+    createPayload(assignmentId, answers);
+    console.log("Submitting answers:", transformarRespuestas(answers));
     setSubmitting(true);
     setShowConfirm(false);
     setTimeout(() => {
@@ -51,6 +56,7 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
       setCompleted(true);
     }, 1500);
   };
+
   if (userLoading) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">

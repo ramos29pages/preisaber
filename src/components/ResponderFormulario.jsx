@@ -10,6 +10,8 @@ import {
   faArrowLeft,
   faLightbulb
 } from '@fortawesome/free-solid-svg-icons';
+import { createResultado } from "../services/resultsService";
+import Swal from "sweetalert2";
 
 export default function ResponderFormulario({ questions = [], assignmentId }) {
   const { user: userActive, loading: userLoading } = useUsers();
@@ -31,7 +33,7 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
       ...answers,
       { 
         question: questions[current]?.pregunta || questions[current]?.question, 
-        answer 
+        response: answer 
       }
     ];
     setAnswers(newAnswers);
@@ -44,17 +46,33 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
     }
   };
 
-  const confirmSubmit = () => {
+  const confirmSubmit = async () => {
 
     console.log("Confirming submission...");
-    createPayload(assignmentId, answers);
+    const payload = await createPayload(assignmentId, answers);
     console.log("Submitting answers:", transformarRespuestas(answers));
-    setSubmitting(true);
-    setShowConfirm(false);
-    setTimeout(() => {
-      setSubmitting(false);
-      setCompleted(true);
-    }, 1500);
+    console.log("Submitting payload:", payload);
+    const res = await createResultado(payload);
+    if(res){
+      console.log("Answers submitted successfully!");
+      setSubmitting(true);
+      setShowConfirm(false);
+      setTimeout(() => {
+        setSubmitting(false);
+        setCompleted(true);
+      }, 1500);
+
+    } else{
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo enviar el formulario. Por favor, inténtalo de nuevo más tarde.',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#FF5733',
+        backdrop: true,
+        background: '#fff',
+      });
+    }
   };
 
   if (userLoading) {

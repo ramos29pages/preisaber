@@ -221,7 +221,7 @@ export default function StudentsForms() {
                   🌞
                 </span>
                 ¡Hola {userName}!
-                <span className="text-yellow-200 animate__animated animate__heartBeat animate__infinite animate__slow">
+                <span className="text-yellow-200 animate__animated animate__heartBeat animate__infinite animate__fast">
                   🔥
                 </span>
               </h1>
@@ -235,7 +235,7 @@ export default function StudentsForms() {
 
             <div className="flex-shrink-0 bg-white/15 backdrop-blur-sm rounded-2xl p-5 border border-orange-300/30">
               <div className="flex items-center gap-3 text-white">
-                <span className="text-sm md:text-3xl animate__animated animate__swing animate__delay-2s">
+                <span className="text-sm md:text-3xl animate__animated animate__swing animate__delay-1s">
                   📅
                 </span>
                 <span className="font-medium">
@@ -250,7 +250,7 @@ export default function StudentsForms() {
             </div>
           </div>
 
-          <div className="mt-6 p-5 bg-white/10 rounded-2xl border border-orange-300/20 animate__animated animate__fadeInUp animate__delay-2s">
+          <div className="mt-6 p-5 bg-white/10 rounded-2xl border border-orange-300/20 animate__animated animate__fadeInUp animate__delay-1s">
             <p className="text-white text-sm sm:text-base text-center md:text-start items-center gap-3">
               <span className="text-sm md:text-xl animate__animated animate__wobble animate__infinite animate__slower">
                 📌
@@ -264,13 +264,13 @@ export default function StudentsForms() {
           </div>
 
           <div className="mt-6 flex justify-center md:justify-items-end flex-wrap gap-3">
-            <span className="px-4 py-2 bg-white/10 rounded-full text-white text-sm font-medium animate__animated animate__fadeInRight animate__delay-3s">
+            <span className="px-4 py-2 bg-white/10 rounded-full text-white text-sm font-medium animate__animated animate__fadeInRight animate__delay-1s">
               📝 {assignments.length} Totales
             </span>
-            <span className="px-4 py-2 bg-white/10 rounded-full text-white text-sm font-medium animate__animated animate__fadeInRight animate__delay-4s">
+            <span className="px-4 py-2 bg-white/10 rounded-full text-white text-sm font-medium animate__animated animate__fadeInRight animate__delay-2s">
               ⏰ Sin Limite
             </span>
-            <span className="px-4 py-2 bg-white/10 rounded-full text-white text-sm font-medium animate__animated animate__fadeInRight animate__delay-5s">
+            <span className="px-4 py-2 bg-white/10 rounded-full text-white text-sm font-medium animate__animated animate__fadeInRight animate__delay-3s">
               🎯 ¡Completa todos!
             </span>
           </div>

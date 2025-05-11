@@ -173,7 +173,7 @@ const AdminForms = () => {
       )}
 
       {selectedFormId && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black/50 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed top-0 left-0 w-full h-full bg-black/50 bg-opacity-50 flex justify-center items-center z-90">
           <FormEditor
             formId={selectedFormId}
             onClose={handleCloseEditor}
@@ -184,7 +184,7 @@ const AdminForms = () => {
       )}
 
       {isCreatingForm && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center z-50">
+        <div className="fixed top-0 left-0 w-full h-full bg-black/70 flex justify-center items-center z-70">
           {/* <FormCreator onClose={handleCloseCreator} onFormCreated={handleCreateFormSuccess} */}
           <AddForm
             onClose={handleCloseCreator}

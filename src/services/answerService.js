@@ -13,14 +13,14 @@ const definitions = [...DEFINITIONS];
 export function transformarRespuestas(answers) {
     const resultado = {};
     definitions.forEach(def => { resultado[def.variable] = 0; });
-    answers.forEach(({ question, answer }) => {
+    answers.forEach(({ question, response }) => {
         const def = definitions.find(d => d.question === question);
         if (!def) return;
         if (def.type === 'number') {
-            const n = parseInt(answer, 10);
+            const n = parseInt(response, 10);
             resultado[def.variable] = isNaN(n) ? 0 : n;
         } else {
-            resultado[def.variable] = answer.trim() === def.positive ? 1 : 0;
+            resultado[def.variable] = response.trim() === def.positive ? 1 : 0;
         }
     });
     return resultado;
@@ -37,31 +37,34 @@ export async function createPayload(asigmentId, answers) {
     let modelSelected = model.find((model) => model.nombre.includes(form.model_name));
 
     try {
-        const prediction = await axios.post(`https://predisaber-backend.onrender.com/resultados/predecir?path=${modelSelected.archivo}`, {
+        const res = await axios.post(`http://localhost:8000/resultados/predecir/68202aae3ddd4d2123e46a78`, {
             ...transformarRespuestas(answers),
         });
 
+        const prediction = res.data;
         console.log('RSESULT PREDICION => ', prediction);
-        prediction_value = prediction.prediction
+        prediction_value = prediction.prediccion
         console.log('PREDICTION VALUE => ', prediction_value);
     } catch (error) {
         console.error('Error al obtener la asignación o el formulario:', error);
     }
 
-    console.log(asignment);
-    console.log(form);
-    console.log('MODEL NAME SELECTED :=> ', modelSelected.nombre);
+    console.log('ASIGNMENT ==> ',asignment);
+    console.log('FORMULARIO ==> ',form);
+    console.log('MODEL NAME SELECTED :=> ', modelSelected);
     console.log('MODEL :=> ', modelSelected);
-    console.log('MODEL PATH :=> ', modelSelected.archivo);
+    console.log('MODEL file :=> ', modelSelected.file);
     console.log('PAYLOAD PREDECIR::=> ', transformarRespuestas(answers));
+    console.log('PAYLOAD PREDECIR::=> ', answers);
     console.log('prediction_value::=> ', prediction_value);
     return {
-        id_asignacion: asigmentId,
-        id_modelo: modelSelected.id,
-        id_formulario: form.id,
-        fecha: new Date().toISOString(),
-        prediccion: prediction_value,
-        respuestas: transformarRespuestas(answers),
+        user_id: asignment.user_id,
+        form_id: asignment.form_id,
+        asigned_id: asigmentId,
+        asigned_by: asignment.asigned_by,
+        completed_at: new Date().toISOString(),
+        prediction: prediction_value,
+        responses: answers,
     };
 
 }

@@ -11,6 +11,7 @@ const Header = ({ onMenuClick }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
   const { user, logout } = useAuth();
+  let userRol = localStorage.getItem("userRole") === "administrador" || "docente";
 
   // Array de notificaciones de ejemplo
   const notifications = [
@@ -53,15 +54,12 @@ const Header = ({ onMenuClick }) => {
     setShowUserModal(!showUserModal);
   };
 
-  const userRol =
-    localStorage.getItem("userRole") === "administrador" || "docente";
-
   return (
     <header className="flex items-center animate__animated animate__fadeInDown mt-0 justify-between w-full py-4 px-2 md:px-4 bg-white shadow-md z-1 relative">
       <div className="flex items-center">
-        {!userRol && (
+        {userRol && (
           <button
-            className="p-2 mr-2 text-gray-500 focus:outline-none md:hidden"
+            className="p-2 mr-2 text-gray-500 block focus:outline-none"
             onClick={onMenuClick}
             aria-label="Mostrar menú"
           >

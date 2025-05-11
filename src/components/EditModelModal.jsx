@@ -113,10 +113,10 @@ export default function EditModelModal({ isOpen, onClose, model, onUpdated }) {
       
       if (updated) {
         Swal.fire({
-          title: 'Correcto',
+          title: 'Modelo actualizado correctamente',
           icon: 'success',
           showConfirmButton: false,
-          timer: 1300
+          timer: 1800
         });
         onClose();
         const onUpdate = () =>{
@@ -129,7 +129,7 @@ export default function EditModelModal({ isOpen, onClose, model, onUpdated }) {
       console.log(e);
       Swal.fire({
         title: e.message || e,
-        icon: 'success',
+        icon: 'error',
         showConfirmButton: false,
         timer: 1300
       });

@@ -1,13 +1,14 @@
 // src/AuthContext.jsx
 import React, { createContext, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { updateUser } from "../services/userService";
+// import { updateUser } from "../services/userService";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [rol, setRol] = useState(null);
 
   const login = (userData) => {
     // Guarda la información del usuario, por ejemplo, en localStorage si lo deseas.
@@ -16,12 +17,12 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("auth_user", JSON.stringify(userData));
     localStorage.setItem("pic", userData.picture);
     console.log('FOTO',userData.picture)
-    updateUser()
     setUser(userData);
+    setRol(userData.role);
 
-    if (userData.role === "administrador" || userData.role === "docente") {
+    if (rol === "administrador" || rol === "docente") {
       navigate("/dashboard"); // Redirige al usuario a la página de usuarios después de iniciar sesión
-    } else if (userData.role === "estudiante") {
+    } else if (rol === "estudiante") {
       navigate("/formularios"); // Redirige al usuario a la página de inicio después de iniciar sesión
     }
   };
@@ -33,6 +34,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user: user,
+    rol,
     login,
     logout,
     isAuthenticated: !!user,

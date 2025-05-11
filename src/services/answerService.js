@@ -9,6 +9,9 @@ import { DEFINITIONS } from '../constants/definitions';
 // 1) Definición de cada variable según tu tabla
 const definitions = [...DEFINITIONS];
 
+
+const API_BASE_URL = 'https://predisaber-backend.onrender.com/resultados/predecir/68202aae3ddd4d2123e46a78'; // Reemplaza con la URL de tu API
+
 // Función de transformación
 export function transformarRespuestas(answers) {
     const resultado = {};
@@ -37,7 +40,7 @@ export async function createPayload(asigmentId, answers) {
     let modelSelected = model.find((model) => model.nombre.includes(form.model_name));
 
     try {
-        const res = await axios.post(`http://localhost:8000/resultados/predecir/68202aae3ddd4d2123e46a78`, {
+        const res = await axios.post(API_BASE_URL, {
             ...transformarRespuestas(answers),
         });
 

@@ -3,6 +3,7 @@ import { useMediaQuery } from "react-responsive";
 import ResultsDesktop from "../components/Resultados/ResultsDesktop";
 import ResultsMobile from "../components/Resultados/ResultsMobile";
 import { getAllResultados } from "../services/resultsService";
+import { useAuth } from "../context/AuthContext";
 
 // Datos mock proporcionados
 // const resultados = [
@@ -65,6 +66,7 @@ import { getAllResultados } from "../services/resultsService";
 export default function Resultados() {
   const [resultados, setResultados] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     getAllResults();
@@ -74,7 +76,7 @@ export default function Resultados() {
     setLoading(true);
     const res = await getAllResultados();
     const hostEmail = localStorage.getItem("host_email");
-    const userRol = localStorage.getItem("userRole");
+    const userRol = user.role;
     console.log("EMAIL FOR ASIGNMENTS::=> ", hostEmail);
     console.log("ROLE FOR ASIGNMENTS::=> ", userRol);
     console.log("RESULTADOS::=> ", res);

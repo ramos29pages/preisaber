@@ -131,11 +131,9 @@ const asignacionesService = {
   updateAsignacion: async (id, updateData) => {
     try {
       const url = `${API_BASE_URL}/${encodeURIComponent(id)}`;
-      // axios.put envía un PUT con JSON en el body por defecto :contentReference[oaicite:0]{index=0}
       const response = await axios.put(url, updateData);
       return response.data;
     } catch (error) {
-      // Extrae mensaje de error o usa el genérico
       const detail = error.response?.data?.detail || error.message;
       throw new Error(`Error al actualizar asignación: ${detail}`);
     }

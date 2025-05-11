@@ -10,8 +10,8 @@ import { useAuth } from "../context/AuthContext";
 const Header = ({ onMenuClick }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
-  const { user, logout } = useAuth();
-  let userRol = localStorage.getItem("userRole") === "administrador" || "docente";
+  const { user, logout, rol } = useAuth();
+  let userRol = rol === "estudiante" ? true : false;
 
   // Array de notificaciones de ejemplo
   const notifications = [
@@ -47,7 +47,7 @@ const Header = ({ onMenuClick }) => {
   }
 
   const toggleNotifications = () => {
-    setShowNotifications(!showNotifications);
+    setShowNotifications(showNotifications);
   };
 
   const toggleUserModal = () => {
@@ -57,7 +57,7 @@ const Header = ({ onMenuClick }) => {
   return (
     <header className="flex items-center animate__animated animate__fadeInDown mt-0 justify-between w-full py-4 px-2 md:px-4 bg-white shadow-md z-1 relative">
       <div className="flex items-center">
-        {userRol && (
+        {!userRol && (
           <button
             className="p-2 mr-2 text-gray-500 block focus:outline-none md:hidden"
             onClick={onMenuClick}
@@ -78,7 +78,7 @@ const Header = ({ onMenuClick }) => {
 
       <div className="flex items-center">
         <div className="flex items-center mr-2">
-          {!userRol && (
+          {showNotifications && (
             <button
               className="text-gray-400 text-xl focus:outline-none relative cursor-pointer"
               onClick={toggleNotifications}
@@ -86,7 +86,7 @@ const Header = ({ onMenuClick }) => {
             >
               <FontAwesomeIcon icon={faBell} />
               <span className="absolute top-1 md:top-1 right-0 inline-flex items-center justify-center px-1 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-rose-500 rounded-full">
-                {/* {notifications.length} */}
+                {notifications.length}
               </span>
             </button>
           )}

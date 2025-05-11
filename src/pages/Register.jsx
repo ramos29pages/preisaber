@@ -1,98 +1,78 @@
-// src/pages/Register.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AddRegisterModal from "../components/AddRegisterModal";
 import { faSearch, faUserPlus } from "@fortawesome/free-solid-svg-icons";
-// import { useNavigate } from "react-router-dom";
 import { useUsers } from "../context/UserContext";
-// import { getUsers } from "../services/userService";
 import { SkeletonUser } from "../components/SkeletonUser";
 import RegisterCard from "../components/RegisterCard";
 import Swal from "sweetalert2";
 
 const Register = () => {
-  // const [loading, setLoading] = useState(true);
-  let [_showAddButtons, setShowAddButtons] = useState(false);
-
-  const { users, user, removeUser, editUser } = useUsers();
-
-  console.log("USER ACTIVE", user);
-  // const [users, setUsers] = useState([]);
-
-  console.log(users);
-
+  const [loading, setLoading] = useState(true); // ✅ Reintroducido para manejar carga
   const [searchTerm, setSearchTerm] = useState("");
-  // const navigate = useNavigate();
+  const [_showAddButtons, setShowAddButtons] = useState(false);
+  const { users, removeUser, editUser } = useUsers();
 
-  //eliminar usuario
+  useEffect(() => {
+    // Simula el fin de la carga una vez que los usuarios están disponibles
+    if (users) {
+      setLoading(false);
+    }
+  }, [users]);
+
+  // Filtrar usuarios según el término de búsqueda
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Eliminar usuario
   const handlerDeleteUser = async (id) => {
     try {
-      Swal.fire({
-        title: "Estás seguro ?",
-        text: "Esta accion no se puede revertir!",
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción no se puede revertir.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#F97316",
         cancelButtonColor: "#64748B",
-        confirmButtonText: "Si, bórralo!",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          await removeUser(id); // Use the removeUser function from the context
-          Swal.fire({
-            title: "Hecho !",
-            text: "El usuario ha sido eliminado.",
-            icon: "success",
-            timer: 1500,
-            showConfirmButton: false,
-          });
-        }
+        confirmButtonText: "Sí, bórralo.",
       });
+
+      if (result.isConfirmed) {
+        await removeUser(id);
+        Swal.fire("¡Hecho!", "El usuario ha sido eliminado.", "success");
+      }
     } catch (error) {
-      console.error("Error deleting user:", error);
-      // toast.error("Error al eliminar el usuario");
+      console.error("Error al eliminar el usuario:", error);
     }
   };
 
-  //actualizar usuario
+  // Actualizar usuario
   const handlerUpdateUser = async (user) => {
     try {
-      Swal.fire({
-        title: "Estás seguro de actualizar ?",
-        text: "Esta accion no se puede revertir!",
+      const result = await Swal.fire({
+        title: "¿Estás seguro de actualizar?",
+        text: "Esta acción no se puede revertir.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#F97316",
         cancelButtonColor: "#64748B",
-        confirmButtonText: "Si, Actualiza!",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          await editUser(user); // Use the removeUser function from the context
-          Swal.fire({
-            title: "Hecho !",
-            text: "El usuario ha sido actualizado.",
-            icon: "success",
-            timer: 1500,
-            showConfirmButton: false,
-          });
-        }
+        confirmButtonText: "Sí, actualiza.",
       });
+
+      if (result.isConfirmed) {
+        await editUser(user);
+        Swal.fire("¡Hecho!", "El usuario ha sido actualizado.", "success");
+      }
     } catch (error) {
-      console.error("Error deleting user:", error);
-      // toast.error("Error al eliminar el usuario");
+      console.error("Error al actualizar el usuario:", error);
     }
   };
 
-  // Filtrar usuarios según búsqueda
-  let filteredUsers = users.filter((user) => {
-    const term = searchTerm.toLowerCase();
-    return (
-      user.name.toLowerCase().includes(term) ||
-      user.email.toLowerCase().includes(term)
-    );
-  });
-
   return (
-    <div className="h-dic scroll-hidden bg-slate-50 " >
+    <div className="h-dic scroll-hidden bg-slate-50">
       <div className="max-w-4xl mx-auto p-4">
         {/* Barra de búsqueda y botón agregar */}
         <div className="flex items-center justify-between mb-6">
@@ -115,13 +95,20 @@ const Register = () => {
           </button>
         </div>
 
-        <p className="text-slate-400 text-xs mb-4">
-          Mostrando
-          <span className="mx-1 font-bold text-slate-400">{filteredUsers.length}</span>
-           de 
-          <span className="mx-1 font-bold text-slate-400">{users.length}</span>
-          .
-        </p>
+        {/* Mostrar conteo solo si no está cargando */}
+        {!loading && (
+          <p className="text-slate-400 text-xs mb-4">
+            Mostrando
+            <span className="mx-1 font-bold text-slate-400">
+              {filteredUsers.length}
+            </span>
+            de
+            <span className="mx-1 font-bold text-slate-400">
+              {users.length}
+            </span>
+            .
+          </p>
+        )}
 
         {/* Lista de usuarios con scroll */}
         <div
@@ -132,25 +119,34 @@ const Register = () => {
             <AddRegisterModal setShowAddButtons={setShowAddButtons} />
           )}
 
-          {/* lista de usuarios con filtros funciando */}
-
-          {filteredUsers.length > 0 ? (
+          {/* Lógica condicional para renderizar contenido */}
+          {loading ? (
+            <>
+              <SkeletonUser />
+              <SkeletonUser />
+              <SkeletonUser />
+            </>
+          ) : filteredUsers.length > 0 ? (
             filteredUsers.map((user) => (
               <RegisterCard
-              key={user.id}
+                key={user.id}
                 onUserDeleted={handlerDeleteUser}
                 onUserUpdated={handlerUpdateUser}
                 user={user}
               />
             ))
+          ) : searchTerm ? (
+            <p className="text-center text-slate-400 py-4">
+              No se encontraron usuarios para "{searchTerm}"
+            </p>
+          ) : users.length === 0 ? (
+            <p className="text-center text-slate-400 py-4">
+              No hay usuarios disponibles
+            </p>
           ) : (
-            <div>
-              <SkeletonUser />
-              <SkeletonUser />
-              <SkeletonUser />
-              <SkeletonUser />
-              <SkeletonUser />
-            </div>
+            <p className="text-center text-slate-400 py-4">
+              No hay usuarios para mostrar
+            </p>
           )}
         </div>
       </div>

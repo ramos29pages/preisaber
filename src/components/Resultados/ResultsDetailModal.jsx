@@ -1,12 +1,6 @@
 // Componente Modal separado
-export default function ResultsDetailModal({ result, onClose }) {
+export default function ResultsDetailModal({ result, onClose, user }) {
     // Datos mock de usuario basados en user_id
-    const user = {
-      name: 'Juan Pérez',
-      semester: '6º Semestre',
-      image: 'https://via.placeholder.com/150'
-    };
-  
     return (
       <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white rounded-2xl shadow-2xl w-11/12 md:w-3/4 lg:w-1/2 overflow-hidden">
@@ -26,9 +20,9 @@ export default function ResultsDetailModal({ result, onClose }) {
             </div>
             {/* Derecha: tarjeta de usuario */}
             <div className="md:w-1/2 p-6 bg-gray-50 flex flex-col items-center justify-center">
-              <img src={user.image} alt={user.name} className="w-32 h-32 rounded-full mb-4" />
+              <img src={user.picture} alt={user.name} className="w-32 h-32 rounded-full mb-4" />
               <h3 className="text-lg font-semibold">{user.name}</h3>
-              <p className="text-gray-600">{user.semester}</p>
+              <p className="text-gray-600">Semestre {user.semester}</p>
               <p className="text-gray-500 mt-2">ID: {result.user_id}</p>
             </div>
           </div>

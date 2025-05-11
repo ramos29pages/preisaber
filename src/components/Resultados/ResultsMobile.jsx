@@ -1,33 +1,55 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDatabase, faEye } from '@fortawesome/free-solid-svg-icons';
+import { useEffect, useState } from 'react';
+import { getUserById } from '../../services/userService';
+import { fetchFormDetails } from '../../services/formService';
 
+export default function ResultsMobile({ resultados, selectedResult, setSelectedResult }) {
+  const [enrichedResults, setEnrichedResults] = useState([]);
 
-export default function ResultsMobile({resultados, selectedResult, setSelectedResult}) {
+  useEffect(() => {
+    if (resultados.length > 0) loadEnrichedResults();
+  }, [resultados]);
+
+  const loadEnrichedResults = async () => {
+    try {
+      const enriched = await Promise.all(
+        resultados.map(async (r) => {
+          const user = await getUserById(r.user_id);
+          const form = await fetchFormDetails(r.form_id);
+          return { ...r, user, form };
+        })
+      );
+      setEnrichedResults(enriched);
+    } catch (error) {
+      console.error('Error cargando datos:', error);
+    }
+  };
 
   return (
-    <div className="p-4 bg-gray-100 scroll-hidden h-dic overflow-y-scroll ">
+    <div className="p-4 bg-gray-100 scroll-hidden h-dic overflow-y-scroll">
       <div className="space-y-4">
-        {resultados.map(r => (
+        {enrichedResults.map((r) => (
           <div key={r.id} className="bg-white rounded-2xl shadow p-4 flex flex-col">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-sm text-gray-500">User ID</p>
-                <p className="font-medium">{r.user_id}</p>
+                <p className="text-sm text-gray-500">Usuario</p>
+                <p className="font-medium">{r.user.name}</p>
               </div>
               <button
                 onClick={() => setSelectedResult(r)}
                 className="flex items-center bg-orange-500 text-white px-3 py-1 rounded-2xl hover:bg-orange-600 transition"
               >
-                <FontAwesomeIcon icon={faEye} className="mr-1" />
+                <FontAwesomeIcon icon={faEye} className="mr-1" /> Ver más
               </button>
             </div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-gray-600">
               <div>
-                <p>Form ID</p>
-                <p className="font-medium">{r.form_id}</p>
+                <p>Formulario</p>
+                <p className="font-medium">{r.form.name}</p>
               </div>
               <div>
-                <p>Asignado</p>
+                <p>Asignado por</p>
                 <p className="font-medium">{r.asigned_by}</p>
               </div>
               <div>
@@ -36,37 +58,36 @@ export default function ResultsMobile({resultados, selectedResult, setSelectedRe
               </div>
               <div>
                 <p>Predicción</p>
-                <p className="font-medium">{r.prediction}</p>
+                {r.prediction > 0 && <p className="font-medium bg-green-50 text-green-800">Encima de la media</p>}
+                {r.prediction == 0 && <p className="font-medium bg-red-50 text-red-800 text-xs p-2 rounded-md">Debajo de la media</p>}
               </div>
             </div>
           </div>
         ))}
       </div>
-      {resultados.length === 0 && (
-              <tr>
-                <td colSpan={6} className="py-4 text-gray-400">
-                  <FontAwesomeIcon className='mr-2' icon={faDatabase}/>
-                  No hay conexion con la base de datos.
-                </td>
-              </tr>
-            )}
+
+      {enrichedResults.length === 0 && (
+        <div className="py-4 text-gray-400 flex items-center">
+          <FontAwesomeIcon className="mr-2" icon={faDatabase} />
+          No hay conexión con la base de datos.
+        </div>
+      )}
+
       {selectedResult && (
-        <DetailModal result={selectedResult} onClose={() => setSelectedResult(null)} />
+        <DetailModal
+          result={selectedResult}
+          user={selectedResult.user}
+          onClose={() => setSelectedResult(null)}
+        />
       )}
     </div>
   );
 }
 
 // Componente Modal separado (versión mobile responsiva)
-function DetailModal({ result, onClose }) {
-  const user = {
-    name: 'Juan Pérez',
-    semester: '6º Semestre',
-    image: 'https://via.placeholder.com/150'
-  };
-
+function DetailModal({ result, user, onClose }) {
   return (
-    <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
         <div className="flex justify-end p-2">
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
@@ -74,13 +95,14 @@ function DetailModal({ result, onClose }) {
         <div className="space-y-4 p-4">
           {/* Tarjeta usuario */}
           <div className="flex items-center space-x-4">
-            <img src={user.image} alt={user.name} className="w-16 h-16 rounded-full" />
+            <img src={user.picture} alt={user.name} className="w-16 h-16 rounded-full" />
             <div>
               <h3 className="text-lg font-semibold text-orange-500">{user.name}</h3>
-              <p className="text-gray-600">{user.semester}</p>
-              <p className="text-gray-500 text-sm">ID: {result.user_id}</p>
+              <p className="text-gray-600">Semestre {user.semester}</p>
+              <p className="text-gray-500 text-sm">ID: {user.id}</p>
             </div>
           </div>
+
           {/* Respuestas */}
           <div>
             <h2 className="text-md font-semibold mb-2 text-orange-500">Respuestas</h2>
@@ -91,7 +113,6 @@ function DetailModal({ result, onClose }) {
                   <p className="text-gray-700 text-sm">{resp.response}</p>
                 </div>
               ))}
-              
             </div>
           </div>
         </div>

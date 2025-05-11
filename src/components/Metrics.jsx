@@ -155,15 +155,15 @@ export default function StudentStatsVisualization({ studentData }) {
             </h3>
             <div className="grid grid-cols-3 gap-3 mb-4">
               <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
-                <div className="text-xs text-gray-500 mb-1">Total</div>
+                <div className="text-xs text-gray-500 text-center mb-1">Total</div>
                 <div className="text-2xl text-center font-extrabold text-gray-800">{total}</div>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
-                <div className="text-xs text-gray-500 mb-1">Sobre la media</div>
+                <div className="text-xs text-gray-500 text-center mb-1">Debajo de la media</div>
                 <div className="text-2xl text-center font-extrabold text-orange-600">{data[0].value}</div>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
-                <div className="text-xs text-gray-500 mb-1">Debajo de la media</div>
+                <div className="text-xs text-gray-500 text-center mb-1">Sobre la media</div>
                 <div className="text-2xl text-center font-extrabold text-gray-600">{data[1].value}</div>
               </div>
             </div>

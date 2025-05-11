@@ -15,6 +15,7 @@ import {
 import StudentFormTableDesktop from "./StudentFormTableDesktop";
 import ResponderFormulario from "./ResponderFormulario";
 import StudentFormCardsMobile from "./StudentFormCardsMobile";
+import { useNavigate } from "react-router-dom";
 
 export default function StudentsForms() {
   const { user } = useAuth();
@@ -25,6 +26,7 @@ export default function StudentsForms() {
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const host_email = localStorage.getItem("host_email");
+  const navigate = useNavigate();
 
   // Capitaliza la primera letra de un string
   const capitalizeFirstLetter = (input) => {
@@ -40,50 +42,52 @@ export default function StudentsForms() {
       let isMounted = true;
       setLoading(true);
 
-      const loadAssignments = async () => {
-        try {
-          const pendingAssignments = await getAsignmentsPending();
-          if (!isMounted) return;
-
-          const assignmentsWithDetailsPromises = pendingAssignments.map(
-            async (assignment) => {
-              const [form, user] = await Promise.all([
-                fetchFormDetails(assignment.form_id),
-                getUserById(assignment.user_id),
-              ]);
-              if (!isMounted) return null;
-              return { ...assignment, form, user };
-            }
-          );
-
-          const assignmentsWithDetails = await Promise.all(
-            assignmentsWithDetailsPromises.filter(Boolean)
-          );
-
-          if (!isMounted) return;
-          
-          setAssignments(assignmentsWithDetails.filter(a => a.user.email === host_email));
-        } catch (err) {
-          console.error("Error al obtener las asignaciones:", err);
-          if (isMounted) {
-            setError(
-              "No se pudieron cargar las asignaciones. Por favor, intente más tarde."
-            );
-          }
-        } finally {
-          if (isMounted) {
-            setLoading(false);
-          }
-        }
-      };
-
-      loadAssignments();
+      loadAssignments(isMounted);
 
       return () => {
         isMounted = false;
       };
     }
   }, [userLoading, userActive]);
+
+  const loadAssignments = async (isMounted) => {
+    try {
+      const pendingAssignments = await getAsignmentsPending();
+      if (!isMounted) return;
+
+      const assignmentsWithDetailsPromises = pendingAssignments.map(
+        async (assignment) => {
+          const [form, user] = await Promise.all([
+            fetchFormDetails(assignment.form_id),
+            getUserById(assignment.user_id),
+          ]);
+          if (!isMounted) return null;
+          return { ...assignment, form, user };
+        }
+      );
+
+      const assignmentsWithDetails = await Promise.all(
+        assignmentsWithDetailsPromises.filter(Boolean)
+      );
+
+      if (!isMounted) return;
+
+      setAssignments(
+        assignmentsWithDetails.filter((a) => a.user.email === host_email)
+      );
+    } catch (err) {
+      console.error("Error al obtener las asignaciones:", err);
+      if (isMounted) {
+        setError(
+          "No se pudieron cargar las asignaciones. Por favor, intente más tarde."
+        );
+      }
+    } finally {
+      if (isMounted) {
+        setLoading(false);
+      }
+    }
+  };
 
   const handleCompleteForm = (assignment) => {
     setSelectedAssignment(assignment);
@@ -96,6 +100,8 @@ export default function StudentsForms() {
   const handleBackToList = () => {
     setSelectedAssignment(null);
     setSearchQuery("");
+    loadAssignments(true);
+    navigate("/formularios");
   };
 
   // Mostrar pantalla de carga
@@ -226,15 +232,16 @@ export default function StudentsForms() {
                 </span>
               </h1>
               <p className="text-sm sm:text-base text-center md:text-start text-orange-100 animate__animated animate__fadeInUp animate__delay-1s">
-                ¡Desbloquea tu futuro! <br className="md:hidden"/> Bienvenido a Predisaber 🚀
+                ¡Desbloquea tu futuro! <br className="md:hidden" /> Bienvenido a
+                Predisaber 🚀
                 <span className="block mt-1">
                   Hoy es un gran día para avanzar!
                 </span>
               </p>
             </div>
 
-            <div className="flex-shrink-0 bg-white/15 backdrop-blur-sm rounded-2xl p-5 border border-orange-300/30">
-              <div className="flex items-center gap-3 text-white">
+            <div className="flex-shrink-0 bg-white/15 text-center backdrop-blur-sm rounded-2xl p-5 border border-orange-300/30">
+              <div className="flex items-center sm:justify-center gap-3 text-white">
                 <span className="text-sm md:text-3xl animate__animated animate__swing animate__delay-1s">
                   📅
                 </span>
@@ -254,10 +261,14 @@ export default function StudentsForms() {
             <p className="text-white text-sm sm:text-base text-center md:text-start items-center gap-3">
               <span className="text-sm md:text-xl animate__animated animate__wobble animate__infinite animate__slower">
                 📌
-              </span>
-              {" "}Tienes{" "}
+              </span>{" "}
+              Tienes{" "}
               <span className="font-bold text-yellow-200">
-                {assignments.filter(a => a.status).length} {assignments.filter(a => a.status).length > 1 ? "formularios pendientes" : "formulario pendiente"}{""}
+                {assignments.filter((a) => !a.status).length}{" "}
+                {assignments.filter((a) => a.status).length > 1
+                  ? "formularios pendientes"
+                  : "formulario pendiente"}
+                {""}
               </span>{" "}
               por completar
             </p>
@@ -287,7 +298,7 @@ export default function StudentsForms() {
       </div>
       <div className="md:hidden">
         <StudentFormCardsMobile
-          assignments={assignments.filter(a=> a.user.email === host_email)}
+          assignments={assignments.filter((a) => a.user.email === host_email)}
           onCompleteForm={handleCompleteForm}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}

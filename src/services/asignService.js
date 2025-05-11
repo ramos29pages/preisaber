@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const API_BASE_URL = 'https://predisaber-backend.onrender.com/asignaciones'; // Reemplaza con la URL de tu API
 
 const asignacionesService = {
@@ -119,6 +121,26 @@ const asignacionesService = {
       throw error;
     }
   },
+
+  /**
+   * Actualiza campos de una asignación por su ID.
+   * @param {string} id - ID de la asignación.
+   * @param {object} updateData - Campos a actualizar (e.g. { status: true }).
+   * @returns {Promise<object>} - Objeto AsignacionOut actualizado.
+   */
+  updateAsignacion: async (id, updateData) => {
+    try {
+      const url = `${API_BASE_URL}/${encodeURIComponent(id)}`;
+      // axios.put envía un PUT con JSON en el body por defecto :contentReference[oaicite:0]{index=0}
+      const response = await axios.put(url, updateData);
+      return response.data;
+    } catch (error) {
+      // Extrae mensaje de error o usa el genérico
+      const detail = error.response?.data?.detail || error.message;
+      throw new Error(`Error al actualizar asignación: ${detail}`);
+    }
+  }
+
 };
 
 export default asignacionesService;

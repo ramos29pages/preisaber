@@ -16,6 +16,7 @@ import {
 import { createResultado } from "../services/resultsService";
 import Swal from "sweetalert2";
 import { updatePictureByEmail } from "../services/userService";
+import asignacionesService from "../services/asignService";
 
 export default function ResponderFormulario({ questions = [], assignmentId }) {
   const { user: userActive, loading: userLoading } = useUsers();
@@ -59,7 +60,8 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
     console.log("Submitting payload:", payload);
     const pic = localStorage.getItem("pic");
     const email = localStorage.getItem("host_email");
-    updatePictureByEmail(email, pic);
+    await updatePictureByEmail(email, pic);
+    await asignacionesService.actualizarAsignacion(assignmentId, { status: true });
     await createResultado(payload);
     console.log("Answers submitted successfully!");
     setTimeout(() => {

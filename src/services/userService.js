@@ -78,3 +78,25 @@ export const updateUserPicture = async (userId, newPictureUrl) => {
   });
   return response.data;
 };
+
+
+
+/**
+   * Actualiza la foto de un usuario identificado por su email.
+   * @param {string} email - Email del usuario.
+   * @param {string} pictureUrl - URL de la nueva imagen.
+   * @returns {Promise<object>} - Objeto UsuarioOut actualizado.
+   */
+  export const updatePictureByEmail = async (email, pictureUrl) => {
+    try {
+      const response = await axios.put(
+        `${API_URL}/email/${encodeURIComponent(email)}/picture`,
+        { picture: pictureUrl }
+      );
+      return response.data;  // UsuarioOut
+    } catch (error) {
+      // Captura y relanza con mensaje más claro
+      const msg = error.response?.data?.detail || error.message;
+      throw new Error(`Error actualizando la imagen: ${msg}`);
+    }
+  }

@@ -1,6 +1,7 @@
 // src/AuthContext.jsx
 import React, { createContext, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { updateUser } from "../services/userService";
 
 const AuthContext = createContext();
 
@@ -13,7 +14,9 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("userRole", userData.role);
     localStorage.setItem("host_email", userData.email);
     localStorage.setItem("auth_user", JSON.stringify(userData));
+    localStorage.setItem("pic", userData.picture);
     console.log('FOTO',userData.picture)
+    updateUser()
     setUser(userData);
 
     if (userData.role === "administrador" || userData.role === "docente") {

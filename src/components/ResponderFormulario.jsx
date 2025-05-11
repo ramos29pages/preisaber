@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 import { useUsers } from "../context/UserContext";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { transformarRespuestas, createPayload } from './../services/answerService';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faSpinner, 
-  faCheck, 
-  faArrowRight, 
+  transformarRespuestas,
+  createPayload,
+} from "./../services/answerService";
+import {
+  faSpinner,
+  faCheck,
+  faArrowRight,
   faQuestionCircle,
   faArrowLeft,
-  faLightbulb
-} from '@fortawesome/free-solid-svg-icons';
+  faLightbulb,
+} from "@fortawesome/free-solid-svg-icons";
 import { createResultado } from "../services/resultsService";
 import Swal from "sweetalert2";
+import { updatePictureByEmail } from "../services/userService";
 
 export default function ResponderFormulario({ questions = [], assignmentId }) {
   const { user: userActive, loading: userLoading } = useUsers();
@@ -28,13 +32,13 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
 
   const handleNext = () => {
     if (!answer) return;
-    
+
     const newAnswers = [
       ...answers,
-      { 
-        question: questions[current]?.pregunta || questions[current]?.question, 
-        response: answer 
-      }
+      {
+        question: questions[current]?.pregunta || questions[current]?.question,
+        response: answer,
+      },
     ];
     setAnswers(newAnswers);
     setAnswer("");
@@ -47,32 +51,21 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
   };
 
   const confirmSubmit = async () => {
-
     console.log("Confirming submission...");
+    setSubmitting(true);
+    setShowConfirm(false);
     const payload = await createPayload(assignmentId, answers);
     console.log("Submitting answers:", transformarRespuestas(answers));
     console.log("Submitting payload:", payload);
-    const res = await createResultado(payload);
-    if(res){
-      console.log("Answers submitted successfully!");
-      setSubmitting(true);
-      setShowConfirm(false);
-      setTimeout(() => {
-        setSubmitting(false);
-        setCompleted(true);
-      }, 1500);
-
-    } else{
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo enviar el formulario. Por favor, inténtalo de nuevo más tarde.',
-        confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#FF5733',
-        backdrop: true,
-        background: '#fff',
-      });
-    }
+    const pic = localStorage.getItem("pic");
+    const email = localStorage.getItem("host_email");
+    updatePictureByEmail(email, pic);
+    await createResultado(payload);
+    console.log("Answers submitted successfully!");
+    setTimeout(() => {
+      setSubmitting(false);
+      setCompleted(true);
+    }, 1500);
   };
 
   if (userLoading) {
@@ -80,10 +73,18 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
       <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
         <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg max-w-md w-full">
           <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-orange-100">
-            <FontAwesomeIcon icon={faSpinner} spin className="text-orange-500 text-3xl" />
+            <FontAwesomeIcon
+              icon={faSpinner}
+              spin
+              className="text-orange-500 text-3xl"
+            />
           </div>
-          <h2 className="text-xl font-bold text-gray-800 mb-2">Cargando tu experiencia</h2>
-          <p className="text-gray-600">Preparando el mejor entorno para tus respuestas...</p>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">
+            Cargando tu experiencia
+          </h2>
+          <p className="text-gray-600">
+            Preparando el mejor entorno para tus respuestas...
+          </p>
         </div>
       </div>
     );
@@ -94,10 +95,18 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
       <div className="min-h-[80vh] flex flex-col items-center p-4">
         <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
           <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FontAwesomeIcon icon={faQuestionCircle} className="text-blue-500 text-3xl" />
+            <FontAwesomeIcon
+              icon={faQuestionCircle}
+              className="text-blue-500 text-3xl"
+            />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-3">Sin contenido disponible</h2>
-          <p className="text-gray-600 mb-6">No hay preguntas para este formulario. Por favor, vuelve más tarde o contacta con el administrador.</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            Sin contenido disponible
+          </h2>
+          <p className="text-gray-600 mb-6">
+            No hay preguntas para este formulario. Por favor, vuelve más tarde o
+            contacta con el administrador.
+          </p>
           <div className="inline-flex items-center text-blue-500 font-medium">
             <FontAwesomeIcon icon={faLightbulb} className="mr-2" />
             <span>¡La paciencia es clave!</span>
@@ -113,15 +122,29 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
         <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 relative">
             <div className="absolute inset-0 rounded-full bg-green-200 animate-ping opacity-50"></div>
-            <FontAwesomeIcon icon={faCheck} className="text-green-600 text-4xl z-10" />
+            <FontAwesomeIcon
+              icon={faCheck}
+              className="text-green-600 text-4xl z-10"
+            />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-3">¡Formulario completado!</h2>
-          <p className="text-gray-600 mb-6">Tus respuestas han sido enviadas correctamente. Gracias por tu participación.</p>
-          <p className="text-sm text-gray-500 mb-2">Total de preguntas respondidas: {total}</p>
-          <p className="text-sm text-gray-500">ID de asignación: {assignmentId}</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            ¡Formulario completado!
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Tus respuestas han sido enviadas correctamente. Gracias por tu
+            participación.
+          </p>
+          <p className="text-sm text-gray-500 mb-2">
+            Total de preguntas respondidas: {total}
+          </p>
+          <p className="text-sm text-gray-500">
+            ID de asignación: {assignmentId}
+          </p>
           <div className="mt-8">
             <div className="h-1 w-20 bg-green-200 rounded-full mx-auto"></div>
-            <p className="text-sm text-green-600 mt-4">Tu contribución es valiosa</p>
+            <p className="text-sm text-green-600 mt-4">
+              Tu contribución es valiosa
+            </p>
           </div>
         </div>
       </div>
@@ -133,12 +156,23 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
       <div className="min-h-[50vh] flex flex-col items-center p-4">
         <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
           <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6 relative">
-            <FontAwesomeIcon icon={faSpinner} spin className="text-orange-500 text-4xl" />
+            <FontAwesomeIcon
+              icon={faSpinner}
+              spin
+              className="text-orange-500 text-4xl"
+            />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-3">Enviando tus respuestas</h2>
-          <p className="text-gray-600 mb-6">Esto no tomará más de un momento...</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            Enviando tus respuestas
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Esto no tomará más de un momento...
+          </p>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div className="bg-orange-500 h-2 rounded-full animate-pulse" style={{ width: '100%' }}></div>
+            <div
+              className="bg-orange-500 h-2 rounded-full animate-pulse"
+              style={{ width: "100%" }}
+            ></div>
           </div>
         </div>
       </div>
@@ -150,14 +184,22 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
       <div className="min-h-[50vh] flex flex-col items-center p-4">
         <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 max-w-md w-full text-center">
           <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto -mt-10 mb-4">
-            <FontAwesomeIcon icon={faQuestionCircle} className="text-orange-500 text-2xl" />
+            <FontAwesomeIcon
+              icon={faQuestionCircle}
+              className="text-orange-500 text-2xl"
+            />
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3">¿Finalizar formulario?</h2>
-          <p className="text-gray-600 mb-6">Estás a punto de enviar tus respuestas. ¿Deseas continuar?</p>
-          
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3">
+            ¿Finalizar formulario?
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Estás a punto de enviar tus respuestas. ¿Deseas continuar?
+          </p>
+
           <div className="space-y-3">
-            <p className="text-sm text-gray-500">Preguntas respondidas: {answers.length} de {total}</p>
- 
+            <p className="text-sm text-gray-500">
+              Preguntas respondidas: {answers.length} de {total}
+            </p>
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
@@ -180,7 +222,7 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
   }
 
   const currentQuestion = questions[current] || {};
-  const pregunta = currentQuestion.pregunta || currentQuestion.question || ""; 
+  const pregunta = currentQuestion.pregunta || currentQuestion.question || "";
   const opts = currentQuestion.options || currentQuestion.opciones || [];
 
   return (
@@ -191,7 +233,10 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
           {/* Información del usuario */}
           <div className="mb-6 pb-4 border-b border-gray-100">
             <h2 className="text-lg sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500 text-center">
-              {userActive?.tipo_prueba ? `Prueba ${userActive.tipo_prueba}, ` : ""}{userActive?.name || ""}
+              {userActive?.tipo_prueba
+                ? `Prueba ${userActive.tipo_prueba}, `
+                : ""}
+              {userActive?.name || ""}
             </h2>
             <p className="text-xs sm:text-sm text-gray-500 text-center mt-1">
               ID de asignación: {assignmentId}
@@ -201,11 +246,15 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
           {/* Barra de progreso */}
           <div className="mb-6">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-gray-700">Progreso</span>
-              <span className="text-sm font-medium text-gray-700">{Math.round(progress)}%</span>
+              <span className="text-sm font-medium text-gray-700">
+                Progreso
+              </span>
+              <span className="text-sm font-medium text-gray-700">
+                {Math.round(progress)}%
+              </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
-              <div 
+              <div
                 className="bg-gradient-to-r from-orange-500 to-amber-500 h-2.5 rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${progress}%` }}
               ></div>
@@ -214,7 +263,7 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
 
           {/* Navegación anterior */}
           {current > 0 && (
-            <button 
+            <button
               onClick={() => setCurrent(current - 1)}
               className="p-2 rounded-full bg-gray-100 text-gray-600 shadow-sm hover:shadow transition-all mb-4"
             >
@@ -236,7 +285,8 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
 
             {/* Pregunta */}
             <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-6 leading-relaxed">
-              {pregunta}{!pregunta.endsWith('?') ? '?' : ''}
+              {pregunta}
+              {!pregunta.endsWith("?") ? "?" : ""}
             </h3>
 
             {/* Opciones de respuesta */}
@@ -245,9 +295,10 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
                 <label
                   key={idx}
                   className={`flex items-center p-3 sm:p-4 border rounded-xl cursor-pointer transition-all duration-200 
-                    ${answer === opt 
-                      ? "bg-orange-50 border-orange-300 shadow-sm" 
-                      : "border-gray-200 hover:bg-gray-50"
+                    ${
+                      answer === opt
+                        ? "bg-orange-50 border-orange-300 shadow-sm"
+                        : "border-gray-200 hover:bg-gray-50"
                     }`}
                 >
                   <input
@@ -258,10 +309,12 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
                     checked={answer === opt}
                     onChange={() => setAnswer(opt)}
                   />
-                  <div className={`w-5 h-5 rounded-full border-2 mr-3 sm:mr-4 flex-shrink-0 transition-colors
-                    ${answer === opt 
-                      ? "border-orange-500 bg-orange-500" 
-                      : "border-gray-300"
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 mr-3 sm:mr-4 flex-shrink-0 transition-colors
+                    ${
+                      answer === opt
+                        ? "border-orange-500 bg-orange-500"
+                        : "border-gray-300"
                     }`}
                   >
                     {answer === opt && (
@@ -281,18 +334,21 @@ export default function ResponderFormulario({ questions = [], assignmentId }) {
             onClick={handleNext}
             disabled={!answer}
             className={`w-full py-3 px-6 rounded-xl text-white font-medium shadow-lg transition-all
-              ${answer 
-                ? "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 hover:shadow-md" 
-                : "bg-gray-400 cursor-not-allowed"
+              ${
+                answer
+                  ? "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 hover:shadow-md"
+                  : "bg-gray-400 cursor-not-allowed"
               }`}
           >
             {current + 1 < total ? (
               <span className="flex items-center justify-center">
-                Siguiente pregunta <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
+                Siguiente pregunta{" "}
+                <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
               </span>
             ) : (
               <span className="flex items-center justify-center">
-                Finalizar y enviar <FontAwesomeIcon icon={faCheck} className="ml-2" />
+                Finalizar y enviar{" "}
+                <FontAwesomeIcon icon={faCheck} className="ml-2" />
               </span>
             )}
           </button>

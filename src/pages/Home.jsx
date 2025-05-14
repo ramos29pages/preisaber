@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Metrics from '../components/Metrics';
+import StudentStatsVisualizationSkeleton from '../components/StudentStatsVisualizationSkeleton';
 
 const Home = () => {
   const { isAuthenticated, user } = useAuth();
@@ -54,7 +55,7 @@ const Home = () => {
   if (chartData === null) {
     return (
       <div className="flex justify-center items-center h-full">
-        <p>Cargando datos...</p>
+        <StudentStatsVisualizationSkeleton/>
       </div>
     );
   }

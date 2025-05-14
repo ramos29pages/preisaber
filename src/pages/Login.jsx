@@ -2,11 +2,19 @@ import React, { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../context/AuthContext";
 import { ADMINISTRADORES } from "../constants/configuration";
+import { useEffect } from "react";
 
 const Login = () => {
   const { login } = useAuth();
   const administradores = ADMINISTRADORES;
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    localStorage.removeItem("auth_user");
+    localStorage.removeItem("host_email");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("pic");
+  }, []);
 
   function capitalizarPrimeraLetra(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -122,7 +130,6 @@ const Login = () => {
                     shape="pill"
                     text="signin_with"
                     width="300"
-                    useOneTap
                   />
                 </div>
               )}

@@ -195,7 +195,7 @@ export default function StudentStatsVisualization({ studentData }) {
                   interval={0}
                   angle={0}
                   textAnchor="middle"
-                  tickFormatter={v => v.includes("Por debajo de la media") ? "1" : "0"}
+                  tickFormatter={v => v.includes("Por debajo de la media") ? "0" : "1"}
                 />
                 <YAxis tick={{ fontSize: 12, fill: '#6b7280'}} />
                 <Tooltip content={<CustomTooltip />} />

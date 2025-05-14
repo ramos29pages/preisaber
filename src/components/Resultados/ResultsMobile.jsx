@@ -134,8 +134,8 @@ export default function ResultsMobile({
 // Componente Modal separado (versión mobile responsiva)
 function DetailModal({ result, user, onClose }) {
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-auto">
+      <div className="bg-white rounded-2xl max-h-200 shadow-2xl w-full max-w-md overflow-hidden">
         <div className="flex justify-end p-2">
           <button
             onClick={onClose}
@@ -144,7 +144,7 @@ function DetailModal({ result, user, onClose }) {
             &times;
           </button>
         </div>
-        <div className="space-y-4 p-4">
+        <div className="space-y-4 p-4 overflow-y-auto max-h-[calc(90vh-100px)]">
           {/* Tarjeta usuario */}
           <div className="flex items-center space-x-4">
             <img
@@ -162,11 +162,11 @@ function DetailModal({ result, user, onClose }) {
           </div>
 
           {/* Respuestas */}
-          <div>
+          <div className="h-[90%]">
             <h2 className="text-md font-semibold mb-2 text-orange-500">
               Respuestas
             </h2>
-            <div className="space-y-3 max-h-64 overflow-y-auto">
+            <div className="space-y-3 overflow-y-auto max-h-64">
               {result.responses.map((resp, idx) => (
                 <div key={idx} className="bg-gray-50 p-3 rounded-lg">
                   <p className="font-medium text-sm">{resp.question}</p>

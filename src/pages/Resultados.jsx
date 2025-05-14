@@ -80,6 +80,7 @@ export default function Resultados() {
     console.log("EMAIL FOR ASIGNMENTS::=> ", hostEmail);
     console.log("ROLE FOR ASIGNMENTS::=> ", userRol);
     console.log("RESULTADOS::=> ", res);
+    setResultados(res);
 
     if (userRol === "administrador") {
       setResultados(res);

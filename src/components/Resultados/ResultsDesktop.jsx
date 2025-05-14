@@ -104,7 +104,51 @@ export default function ResultsDesktop({
         </select>
       </div>
 
-      {loading && <LoaderSquare />}
+      {loading && (
+        <div
+          className="overflow-y-auto bg-white rounded-2xl shadow scroll-smooth"
+          style={{ maxHeight: "calc(100dvh - 250px)" }}
+        >
+          <table className="min-w-full table-fixed">
+            <thead className="bg-orange-500 text-center text-white sticky top-0">
+              <tr>
+                <th className="py-3 px-4 z-10">Usuario</th>
+                <th className="py-3 px-4 z-10">Formulario</th>
+                <th className="py-3 px-4 z-10">Asignado por</th>
+                <th className="py-3 px-4 z-10">Completado</th>
+                <th className="py-3 px-4 z-10">Predicción</th>
+                <th className="py-3 px-4 z-10">-</th>
+              </tr>
+            </thead>
+
+            <tbody className="divide-y divide-orange-200 text-center text-gray-500">
+              {/* Skeleton Rows */}
+              {Array.from({ length: 3 }).map((_, idx) => (
+                <tr key={idx} className="hover:bg-gray-50 animate-pulse">
+                  <td className="py-2 px-4">
+                    <div className="h-4 bg-gray-300 rounded-md w-3/4 mx-auto"></div>
+                  </td>
+                  <td className="py-2 px-4">
+                    <div className="h-4 bg-gray-300 rounded-md w-1/2 mx-auto"></div>
+                  </td>
+                  <td className="py-2 px-4">
+                    <div className="h-4 bg-gray-300 rounded-md w-5/6 mx-auto"></div>
+                  </td>
+                  <td className="py-2 px-4">
+                    <div className="h-4 bg-gray-300 rounded-md w-2/3 mx-auto"></div>
+                  </td>
+                  <td className="py-2 px-4">
+                    <div className="h-4 bg-gray-300 rounded-md w-1/4 mx-auto"></div>
+                  </td>
+                  <td className="py-2 px-4 flex justify-center">
+                    <div className="h-8 w-24 bg-gray-300 rounded-2xl"></div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {!loading && (
         <div

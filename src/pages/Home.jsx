@@ -33,7 +33,7 @@ const Home = () => {
     fetch('https://predisaber-backend.onrender.com/resultados')
       .then(res => {
         if (!res.ok) throw new Error('Error al obtener datos');
-        console.log('RESULTADOS PRA CHART', res);
+        // console.log('RESULTADOS PRA CHART', res);
         return res.json();
       })
       .then((data) => {

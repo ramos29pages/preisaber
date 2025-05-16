@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
   // Cargar usuarios al iniciar la app
   useEffect(() => {
     fetchUsers();
-    console.log('usuarios tods: ' , users);
+    // console.log('usuarios tods: ' , users);
 
   }, []);
   
@@ -60,7 +60,7 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ users, setUsers, createUser, editUser, removeUser, getUser, user, loading }}
+      value={{ users, setUsers, createUser, editUser, removeUser, getUser, user, loading, fetchUsers }}
     >
       {children}
     </UserContext.Provider>

@@ -28,11 +28,11 @@ const Login = () => {
         atob(credentialResponse.credential.split(".")[1])
       );
 
-      console.log("Decoded JWT:", decoded);
-      console.log(
-        "Decoded JWT Name :",
-        decoded.name.split(" ")[0] + " " + decoded.name.split(" ")[2]
-      );
+      // console.log("Decoded JWT:", decoded);
+      // console.log(
+      //   "Decoded JWT Name :",
+      //   decoded.name.split(" ")[0] + " " + decoded.name.split(" ")[2]
+      // );
 
       const email = decoded.email || "";
       let role = "";
@@ -62,7 +62,7 @@ const Login = () => {
         role,
       };
 
-      console.log("User Data:", userData);
+      // console.log("User Data:", userData);
 
       setTimeout(() => {
         login(userData); // Llama a la función de login del contexto

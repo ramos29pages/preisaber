@@ -13,6 +13,8 @@ const Register = () => {
   const [_showAddButtons, setShowAddButtons] = useState(false);
   const { users, removeUser, editUser } = useUsers();
 
+    
+
   useEffect(() => {
     // Simula el fin de la carga una vez que los usuarios están disponibles
     if (users) {

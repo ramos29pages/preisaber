@@ -16,13 +16,13 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("host_email", userData.email);
     localStorage.setItem("auth_user", JSON.stringify(userData));
     localStorage.setItem("pic", userData.picture);
-    console.log('FOTO',userData.picture)
+    console.log('@ramosdev')
     setUser(userData);
     setRol(userData.role);
 
-    if (rol === "administrador" || rol === "docente") {
+    if (userData.role === "administrador" || userData.role === "docente") {
       navigate("/dashboard"); // Redirige al usuario a la página de usuarios después de iniciar sesión
-    } else if (rol === "estudiante") {
+    } else if (userData.role === "estudiante") {
       navigate("/formularios"); // Redirige al usuario a la página de inicio después de iniciar sesión
     }
   };

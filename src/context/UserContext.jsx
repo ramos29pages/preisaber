@@ -26,12 +26,12 @@ export const UserProvider = ({ children }) => {
     const data = await getUsers();
     setUsers(data);
     setLoading(false);
-    console.log('usuarios: ' , data);
+    // console.log('usuarios: ' , data);
 
     if(userAuth.role === 'estudiante'){
       const userActive = await getUserById(localStorage.getItem("host_email"));
       setUser(userActive);
-      console.log('userActive', userActive);
+      // console.log('userActive', userActive);
     }
   }
 
